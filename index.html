@@ -474,6 +474,7 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: var(--dark); /* Добавлено: темный текст для читаемости */
         }
 
         .trend-indicator {
@@ -687,8 +688,7 @@
         
         <!-- Дашборд -->
         <div id="dashboard" class="tab-content active">
-            <!-- Содержимое дашборда остается без изменений -->
-            <h2>Дашборд</h2>
+            <h2 style="color: var(--dark);">Дашборд</h2>
             
             <div class="filters">
                 <div class="filter-group">
@@ -1398,7 +1398,7 @@
                 name: "Себестоимость",
                 keywords: ["химия", "материал", "смарикомплекс", "оборудование", "запчасти", "инструмент", 
                           "расходники", "перчатки", "полотенца", "шампунь", "воск", "полироль", "щетки",
-                          "пены", "автохимия", "моющее", "чистящее", "абразив", "паста", "герметик"]
+                          "пены", "автохимия", "моющее", "чистящее", "абразив", " паста", "герметик"]
             },
             // Прямые затраты
             direct: {
@@ -2171,21 +2171,21 @@
                 switch (filterPeriod) {
                     case 'current_month':
                         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
                         break;
                     case 'last_month':
                         startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                        endDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
                         break;
                     case 'last_3_months':
                         startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
                         break;
                 }
                 
                 filteredTransactions = filteredTransactions.filter(t => {
                     const transactionDate = new Date(t.date);
-                    return transactionDate >= startDate && transactionDate < endDate;
+                    return transactionDate >= startDate && transactionDate <= endDate;
                 });
             }
             
@@ -2643,23 +2643,23 @@
             switch (period) {
                 case 'current_month':
                     startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
                     break;
                 case 'last_month':
                     startDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-                    endDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
                     break;
                 case 'last_3_months':
                     startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+                    endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
                     break;
                 case 'current_year':
                     startDate = new Date(now.getFullYear(), 0, 1);
-                    endDate = new Date(now.getFullYear() + 1, 0, 1);
+                    endDate = new Date(now.getFullYear() + 1, 0, 0, 23, 59, 59, 999);
                     break;
                 case 'last_year':
                     startDate = new Date(now.getFullYear() - 1, 0, 1);
-                    endDate = new Date(now.getFullYear(), 0, 1);
+                    endDate = new Date(now.getFullYear(), 0, 0, 23, 59, 59, 999);
                     break;
                 case 'custom':
                     const start = document.getElementById('start-date').value;
@@ -2667,8 +2667,7 @@
                     if (start && end) {
                         startDate = new Date(start);
                         endDate = new Date(end);
-                        // Добавляем 1 день к конечной дате, чтобы включить ее полностью
-                        endDate.setDate(endDate.getDate() + 1);
+                        endDate.setHours(23, 59, 59, 999);
                     } else {
                         // Если даты не выбраны, показываем все транзакции
                         return transactions;
@@ -2680,7 +2679,7 @@
             
             return transactions.filter(t => {
                 const transactionDate = new Date(t.date);
-                return transactionDate >= startDate && transactionDate < endDate;
+                return transactionDate >= startDate && transactionDate <= endDate;
             });
         }
         
@@ -2965,16 +2964,16 @@
             if (reportMonth) {
                 const [year, month] = reportMonth.split('-');
                 if (reportPeriod === 'first_half') {
-                    // 1-15 число месяца включительно до 23:59
+                    // 1-15 число месяца включительно до 23:59:59.999
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month - 1, 15, 23, 59, 59);
+                    endDate = new Date(year, month - 1, 15, 23, 59, 59, 999);
                 } else if (reportPeriod === 'second_half') {
-                    // 16 число месяца до последнего дня месяца включительно до 23:59
+                    // 16 число месяца до последнего дня месяца включительно до 23:59:59.999
                     startDate = new Date(year, month - 1, 16);
-                    endDate = new Date(year, month, 0, 23, 59, 59); // Последний день месяца 23:59:59
+                    endDate = new Date(year, month, 0, 23, 59, 59, 999); // Последний день месяца 23:59:59.999
                 } else {
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month, 0, 23, 59, 59);
+                    endDate = new Date(year, month, 0, 23, 59, 59, 999); // Последний день месяца 23:59:59.999
                 }
             } else {
                 // Если месяц не выбран, используем текущий месяц
@@ -2983,23 +2982,20 @@
                 
                 if (reportPeriod === 'first_half') {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59, 999);
                 } else if (reportPeriod === 'second_half') {
                     startDate = new Date(currentYear, currentMonth, 16);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
                 } else {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
                 }
             }
             
             // Фильтрация транзакций по периоду отчета
             const reportTransactions = transactions.filter(t => {
                 const transactionDate = new Date(t.date);
-                // Устанавливаем время транзакции на конец дня для корректного сравнения
-                const transactionDateTime = new Date(transactionDate);
-                transactionDateTime.setHours(23, 59, 59, 999);
-                return transactionDateTime >= startDate && transactionDateTime <= endDate;
+                return transactionDate >= startDate && transactionDate <= endDate;
             });
             
             // Расчет показателей для отчета
@@ -3066,128 +3062,167 @@
                         </div>
                     </div>
                     
-                    <div class="settlement-card">
-                        <h3>Взаимные расчеты</h3>
-                        <p>Сумма, которую необходимо перевести для уравнивания прибыли</p>
-                        <div class="settlement-amount ${mutualSettlement > 0 ? 'card-positive' : 'card-negative'}">
-                            ${Math.abs(mutualSettlement).toFixed(2)} руб.
-                        </div>
-                        <p>${mutualSettlement > 0 ? 'Султан должен перевести Чингизу' : 'Чингиз должен перевести Султану'}</p>
-                    </div>
-                    
                     <div class="summary-cards">
                         <div class="card">
                             <h3>Прибыль Чингиза</h3>
-                            <div class="card-value card-positive">${chingizProfit.toFixed(2)} руб.</div>
+                            <div class="card-value">${chingizProfit.toFixed(2)} руб.</div>
                             <p>50% от Детейлинга и постов 1-2</p>
                         </div>
                         
                         <div class="card">
                             <h3>Прибыль Султана</h3>
-                            <div class="card-value card-positive">${sultanProfit.toFixed(2)} руб.</div>
+                            <div class="card-value">${sultanProfit.toFixed(2)} руб.</div>
                             <p>50% от Детейлинга и постов 1-2 + 100% постов 3-5</p>
                         </div>
                         
                         <div class="card">
                             <h3>Общая прибыль</h3>
-                            <div class="card-value card-neutral">${totalProfit.toFixed(2)} руб.</div>
+                            <div class="card-value">${totalProfit.toFixed(2)} руб.</div>
                             <p>После всех расходов</p>
                         </div>
                     </div>
                     
-                    <div class="detail-table">
-                        <h4>Детализация доходов</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Дата</th>
-                                    <th>Категория</th>
-                                    <th>Способ оплаты</th>
-                                    <th>Сумма</th>
-                                    <th>Описание</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${incomeTransactions.map(t => `
-                                    <tr>
-                                        <td>${formatDate(t.date)}</td>
-                                        <td>${getCategoryLabel(t.category)}</td>
-                                        <td>${getPaymentLabel(t.payment)}</td>
-                                        <td>${t.amount.toFixed(2)} руб.</td>
-                                        <td>${t.description || ''}</td>
-                                    </tr>
-                                `).join('')}
-                                <tr style="font-weight: bold; background-color: #f8f9fa;">
-                                    <td colspan="3">ИТОГО ДОХОДЫ</td>
-                                    <td>${incomeTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="settlement-card">
+                        <h3>Взаимные расчеты</h3>
+                        <p>Сумма, которую необходимо перевести для уравнивания прибыли</p>
+                        <div class="settlement-amount">${Math.abs(mutualSettlement).toFixed(2)} руб.</div>
+                        <p>${mutualSettlement > 0 ? 'Султан должен перевести Чингизу' : mutualSettlement < 0 ? 'Чингиз должен перевести Султану' : 'Расчеты сбалансированы'}</p>
                     </div>
                     
-                    <div class="detail-table">
-                        <h4>Детализация расходов</h4>
-                        <table>
-                            <thead>
+                    <h3 class="section-title">Доходы (${incomeTransactions.length} операций)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Категория</th>
+                                <th>Способ оплаты</th>
+                                <th>Сумма</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${incomeTransactions.map(t => `
                                 <tr>
-                                    <th>Дата</th>
-                                    <th>Категория</th>
-                                    <th>Способ оплаты</th>
-                                    <th>Сумма</th>
-                                    <th>Описание</th>
-                                    <th>Категория расходов</th>
+                                    <td>${formatDate(t.date)}</td>
+                                    <td>${getCategoryLabel(t.category)}</td>
+                                    <td>${getPaymentLabel(t.payment)}</td>
+                                    <td>${t.amount.toFixed(2)} руб.</td>
+                                    <td>${t.description || ''}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                ${expenseTransactions.map(t => {
-                                    const manualCategory = t.manualExpenseCategory;
-                                    let expenseCategoryDisplay;
-                                    if (manualCategory) {
-                                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                                    } else {
-                                        const autoCategory = classifyExpense(t.description);
-                                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
-                                    }
-                                    
-                                    return `
-                                        <tr>
-                                            <td>${formatDate(t.date)}</td>
-                                            <td>${getCategoryLabel(t.category)}</td>
-                                            <td>${getPaymentLabel(t.payment)}</td>
-                                            <td>${t.amount.toFixed(2)} руб.</td>
-                                            <td>${t.description || ''}</td>
-                                            <td>${expenseCategoryDisplay}</td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                                <tr style="font-weight: bold; background-color: #f8f9fa;">
-                                    <td colspan="3">ИТОГО РАСХОДЫ</td>
-                                    <td>${expenseTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                            `).join('')}
+                            <tr style="font-weight: bold;">
+                                <td colspan="3">ИТОГО:</td>
+                                <td>${incomeTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
-                    <div class="profit-analysis">
-                        <h4>Анализ прибыльности</h4>
-                        <div class="profit-metrics">
-                            <div class="metric-card">
-                                <div>Общая рентабельность</div>
-                                <div class="metric-value">${advancedAnalysis.totals.totalIncome > 0 ? 
-                                    ((advancedAnalysis.totals.totalNetProfit / advancedAnalysis.totals.totalIncome) * 100).toFixed(1) : 0}%</div>
+                    <h3 class="section-title">Расходы (${expenseTransactions.length} операций)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Категория</th>
+                                <th>Способ оплаты</th>
+                                <th>Сумма</th>
+                                <th>Описание</th>
+                                <th>Категория расходов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${expenseTransactions.map(t => {
+                                const manualCategory = t.manualExpenseCategory;
+                                const autoCategory = classifyExpense(t.description);
+                                const expenseCategory = manualCategory ? 
+                                    `${getExpenseCategoryName(manualCategory)} (ручная)` : 
+                                    `${getExpenseCategoryName(autoCategory)} (авто)`;
+                                
+                                return `
+                                <tr>
+                                    <td>${formatDate(t.date)}</td>
+                                    <td>${getCategoryLabel(t.category)}</td>
+                                    <td>${getPaymentLabel(t.payment)}</td>
+                                    <td>${t.amount.toFixed(2)} руб.</td>
+                                    <td>${t.description || ''}</td>
+                                    <td>${expenseCategory}</td>
+                                </tr>
+                                `;
+                            }).join('')}
+                            <tr style="font-weight: bold;">
+                                <td colspan="3">ИТОГО:</td>
+                                <td>${expenseTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h3 class="section-title">Анализ рентабельности</h3>
+                    <div class="profit-breakdown">
+                        <div class="breakdown-card">
+                            <h4>Детейлинг</h4>
+                            <div class="comparison-grid">
+                                <div class="comparison-item">
+                                    <span>Валовая маржа:</span>
+                                    <span>${advancedAnalysis.detailing.grossMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Чистая маржа:</span>
+                                    <span>${advancedAnalysis.detailing.netMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Себестоимость:</span>
+                                    <span>${advancedAnalysis.detailing.costOfGoodsSold.toFixed(2)} руб.</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Операционные расходы:</span>
+                                    <span>${advancedAnalysis.detailing.operatingExpenses.toFixed(2)} руб.</span>
+                                </div>
                             </div>
-                            <div class="metric-card">
-                                <div>Валовая маржа</div>
-                                <div class="metric-value">${advancedAnalysis.totals.totalIncome > 0 ? 
-                                    ((advancedAnalysis.totals.totalGrossProfit / advancedAnalysis.totals.totalIncome) * 100).toFixed(1) : 0}%</div>
+                        </div>
+                        
+                        <div class="breakdown-card">
+                            <h4>Посты 1-2</h4>
+                            <div class="comparison-grid">
+                                <div class="comparison-item">
+                                    <span>Валовая маржа:</span>
+                                    <span>${advancedAnalysis.self12.grossMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Чистая маржа:</span>
+                                    <span>${advancedAnalysis.self12.netMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Себестоимость:</span>
+                                    <span>${advancedAnalysis.self12.costOfGoodsSold.toFixed(2)} руб.</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Операционные расходы:</span>
+                                    <span>${advancedAnalysis.self12.operatingExpenses.toFixed(2)} руб.</span>
+                                </div>
                             </div>
-                            <div class="metric-card">
-                                <div>Оборачиваемость</div>
-                                <div class="metric-value">${advancedAnalysis.totals.totalCosts > 0 ? 
-                                    (advancedAnalysis.totals.totalIncome / advancedAnalysis.totals.totalCosts).toFixed(2) : 0}</div>
+                        </div>
+                        
+                        <div class="breakdown-card">
+                            <h4>Посты 3-5</h4>
+                            <div class="comparison-grid">
+                                <div class="comparison-item">
+                                    <span>Валовая маржа:</span>
+                                    <span>${advancedAnalysis.self35.grossMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Чистая маржа:</span>
+                                    <span>${advancedAnalysis.self35.netMargin.toFixed(1)}%</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Себестоимость:</span>
+                                    <span>${advancedAnalysis.self35.costOfGoodsSold.toFixed(2)} руб.</span>
+                                </div>
+                                <div class="comparison-item">
+                                    <span>Операционные расходы:</span>
+                                    <span>${advancedAnalysis.self35.operatingExpenses.toFixed(2)} руб.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3198,37 +3233,12 @@
         // Сохранение отчета
         function saveReport() {
             const reportContent = document.getElementById('report-content').innerHTML;
-            const blob = new Blob([`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Отчет автомойки</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
-                        .summary-cards { display: flex; flex-wrap: wrap; gap: 10px; }
-                        .summary-cards > div { flex: 1; min-width: 200px; }
-                        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        .card-positive { color: green; }
-                        .card-negative { color: red; }
-                        .settlement-card { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; }
-                        .profit-metrics { display: flex; gap: 10px; margin: 10px 0; }
-                        .metric-card { flex: 1; text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-                    </style>
-                </head>
-                <body>
-                    ${reportContent}
-                </body>
-                </html>
-            `], { type: 'text/html' });
-            
+            const blob = new Blob([reportContent], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
-            a.download = `отчет_автомойки_${new Date().toISOString().split('T')[0]}.html`;
+            a.download = `Отчет_${new Date().toISOString().slice(0, 10)}.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -3237,6 +3247,7 @@
         
         // Экспорт отчета в Excel
         function exportReportToExcel() {
+            // Получаем те же данные, что и для отчета
             const reportPeriod = document.getElementById('report-period').value;
             const reportMonth = document.getElementById('report-month').value;
             
@@ -3247,13 +3258,13 @@
                 const [year, month] = reportMonth.split('-');
                 if (reportPeriod === 'first_half') {
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month - 1, 15, 23, 59, 59);
+                    endDate = new Date(year, month - 1, 15, 23, 59, 59, 999);
                 } else if (reportPeriod === 'second_half') {
                     startDate = new Date(year, month - 1, 16);
-                    endDate = new Date(year, month, 0, 23, 59, 59);
+                    endDate = new Date(year, month, 0, 23, 59, 59, 999);
                 } else {
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month, 0, 23, 59, 59);
+                    endDate = new Date(year, month, 0, 23, 59, 59, 999);
                 }
             } else {
                 const currentYear = now.getFullYear();
@@ -3261,99 +3272,131 @@
                 
                 if (reportPeriod === 'first_half') {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59, 999);
                 } else if (reportPeriod === 'second_half') {
                     startDate = new Date(currentYear, currentMonth, 16);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
                 } else {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59);
+                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
                 }
             }
             
             // Фильтрация транзакций по периоду отчета
             const reportTransactions = transactions.filter(t => {
                 const transactionDate = new Date(t.date);
-                const transactionDateTime = new Date(transactionDate);
-                transactionDateTime.setHours(23, 59, 59, 999);
-                return transactionDateTime >= startDate && transactionDateTime <= endDate;
+                return transactionDate >= startDate && transactionDate <= endDate;
             });
             
-            // Подготовка данных для Excel
+            // Расчет показателей для отчета
+            const {
+                detailingIncome, detailingExpense, detailingNet,
+                self12Income, self12Expense, self12Net,
+                self35Income, self35Expense, self35Net,
+                chingizProfit, sultanProfit, totalProfit,
+                mutualSettlement
+            } = calculateProfits(reportTransactions);
+            
+            // Создание книги Excel
             const wb = XLSX.utils.book_new();
             
-            // Лист с общими данными
-            const generalData = [
-                ['Отчет автомойки и детейлинга'],
-                [`Период: ${formatDate(startDate)} - ${formatDate(endDate)}`],
+            // Лист с итогами
+            const summaryData = [
+                ['Отчет за период:', `${formatDate(startDate)} - ${formatDate(endDate)}`],
                 [''],
-                ['Показатель', 'Сумма (руб.)'],
-                ['Детейлинг - доходы', reportTransactions.filter(t => t.type === 'income' && t.category === 'detailing').reduce((sum, t) => sum + t.amount, 0)],
-                ['Детейлинг - расходы', reportTransactions.filter(t => t.type === 'expense' && t.category === 'detailing').reduce((sum, t) => sum + t.amount, 0)],
-                ['Детейлинг - чистая прибыль', reportTransactions.filter(t => t.category === 'detailing').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)],
+                ['Детейлинг', ''],
+                ['Доходы', detailingIncome],
+                ['Расходы', detailingExpense],
+                ['Чистая прибыль', detailingNet],
+                ['Доля Чингиза', detailingNet / 2],
+                ['Доля Султана', detailingNet / 2],
                 [''],
-                ['Самообслуживание 1-2 - доходы', reportTransactions.filter(t => t.type === 'income' && t.category === 'self12').reduce((sum, t) => sum + t.amount, 0)],
-                ['Самообслуживание 1-2 - расходы', reportTransactions.filter(t => t.type === 'expense' && t.category === 'self12').reduce((sum, t) => sum + t.amount, 0)],
-                ['Самообслуживание 1-2 - чистая прибыль', reportTransactions.filter(t => t.category === 'self12').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)],
+                ['Самообслуживание (посты 1-2)', ''],
+                ['Доходы', self12Income],
+                ['Расходы', self12Expense],
+                ['Чистая прибыль', self12Net],
+                ['Доля Чингиза', self12Net / 2],
+                ['Доля Султана', self12Net / 2],
                 [''],
-                ['Самообслуживание 3-5 - доходы', reportTransactions.filter(t => t.type === 'income' && t.category === 'self35').reduce((sum, t) => sum + t.amount, 0)],
-                ['Самообслуживание 3-5 - расходы', reportTransactions.filter(t => t.type === 'expense' && t.category === 'self35').reduce((sum, t) => sum + t.amount, 0)],
-                ['Самообслуживание 3-5 - чистая прибыль', reportTransactions.filter(t => t.category === 'self35').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)],
+                ['Самообслуживание (посты 3-5)', ''],
+                ['Доходы', self35Income],
+                ['Расходы', self35Expense],
+                ['Чистая прибыль', self35Net],
+                ['Принадлежит Султану', self35Net],
                 [''],
-                ['Прибыль Чингиза', (reportTransactions.filter(t => t.category === 'detailing').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0) + 
-                                     reportTransactions.filter(t => t.category === 'self12').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)) / 2],
-                ['Прибыль Султана', (reportTransactions.filter(t => t.category === 'detailing').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0) + 
-                                     reportTransactions.filter(t => t.category === 'self12').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)) / 2 + 
-                                     reportTransactions.filter(t => t.category === 'self35').reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)],
-                ['Общая прибыль', reportTransactions.reduce((sum, t) => sum + (t.type === 'income' ? t.amount : -t.amount), 0)]
+                ['Итоги', ''],
+                ['Прибыль Чингиза', chingizProfit],
+                ['Прибыль Султана', sultanProfit],
+                ['Общая прибыль', totalProfit],
+                ['Взаимные расчеты', mutualSettlement],
+                ['', mutualSettlement > 0 ? 'Султан должен Чингизу' : mutualSettlement < 0 ? 'Чингиз должен Султану' : 'Сбалансировано']
             ];
             
-            const wsGeneral = XLSX.utils.aoa_to_sheet(generalData);
-            XLSX.utils.book_append_sheet(wb, wsGeneral, 'Общие данные');
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Итоги');
             
-            // Лист с транзакциями
-            const transactionsData = [
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
+            // Лист с доходами
+            const incomeData = [
+                ['Дата', 'Категория', 'Способ оплаты', 'Сумма', 'Описание']
             ];
             
-            reportTransactions.forEach(t => {
-                let expenseCategoryDisplay = '';
-                if (t.type === 'expense') {
+            reportTransactions
+                .filter(t => t.type === 'income')
+                .forEach(t => {
+                    incomeData.push([
+                        t.date,
+                        getCategoryLabel(t.category),
+                        getPaymentLabel(t.payment),
+                        t.amount,
+                        t.description || ''
+                    ]);
+                });
+            
+            incomeData.push(['ИТОГО:', '', '', reportTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)]);
+            
+            const wsIncome = XLSX.utils.aoa_to_sheet(incomeData);
+            XLSX.utils.book_append_sheet(wb, wsIncome, 'Доходы');
+            
+            // Лист с расходами
+            const expenseData = [
+                ['Дата', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
+            ];
+            
+            reportTransactions
+                .filter(t => t.type === 'expense')
+                .forEach(t => {
                     const manualCategory = t.manualExpenseCategory;
-                    if (manualCategory) {
-                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                    } else {
-                        const autoCategory = classifyExpense(t.description);
-                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
-                    }
-                }
-                
-                transactionsData.push([
-                    formatDate(t.date),
-                    getTypeLabel(t.type),
-                    getCategoryLabel(t.category),
-                    getPaymentLabel(t.payment),
-                    t.amount,
-                    t.description || '',
-                    expenseCategoryDisplay
-                ]);
-            });
+                    const autoCategory = classifyExpense(t.description);
+                    const expenseCategory = manualCategory ? 
+                        `${getExpenseCategoryName(manualCategory)} (ручная)` : 
+                        `${getExpenseCategoryName(autoCategory)} (авто)`;
+                    
+                    expenseData.push([
+                        t.date,
+                        getCategoryLabel(t.category),
+                        getPaymentLabel(t.payment),
+                        t.amount,
+                        t.description || '',
+                        expenseCategory
+                    ]);
+                });
             
-            const wsTransactions = XLSX.utils.aoa_to_sheet(transactionsData);
-            XLSX.utils.book_append_sheet(wb, wsTransactions, 'Транзакции');
+            expenseData.push(['ИТОГО:', '', '', reportTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), '', '']);
+            
+            const wsExpense = XLSX.utils.aoa_to_sheet(expenseData);
+            XLSX.utils.book_append_sheet(wb, wsExpense, 'Расходы');
             
             // Сохранение файла
-            XLSX.writeFile(wb, `отчет_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(wb, `Отчет_${formatDate(startDate)}_${formatDate(endDate)}.xlsx`);
         }
         
-        // Экспорт данных в Excel
+        // Экспорт в Excel
         function exportToExcel() {
-            // Подготовка данных для Excel
             const wb = XLSX.utils.book_new();
             
-            // Лист с транзакциями
-            const transactionsData = [
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов', 'ID', 'Дата создания']
+            // Данные операций
+            const data = [
+                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
             ];
             
             transactions.forEach(t => {
@@ -3368,24 +3411,21 @@
                     }
                 }
                 
-                transactionsData.push([
+                data.push([
                     t.date,
-                    t.type,
-                    t.category,
-                    t.payment,
+                    getTypeLabel(t.type),
+                    getCategoryLabel(t.category),
+                    getPaymentLabel(t.payment),
                     t.amount,
                     t.description || '',
-                    expenseCategoryDisplay,
-                    t.id,
-                    t.createdAt || ''
+                    expenseCategoryDisplay
                 ]);
             });
             
-            const wsTransactions = XLSX.utils.aoa_to_sheet(transactionsData);
-            XLSX.utils.book_append_sheet(wb, wsTransactions, 'Транзакции');
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Операции');
             
-            // Сохранение файла
-            XLSX.writeFile(wb, `данные_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(wb, `Операции_автомойки_${new Date().toISOString().slice(0, 10)}.xlsx`);
         }
         
         // Экспорт данных
@@ -3399,17 +3439,14 @@
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
-            a.download = isBackup ? `backup_autowash_${new Date().toISOString().split('T')[0]}.json` : 'autowash_data.json';
+            a.download = isBackup ? `backup_${new Date().toISOString().slice(0, 10)}.json` : 'carwash_data.json';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
-            if (isBackup) {
-                alert('Резервная копия создана успешно');
-            }
         }
         
         // Импорт данных
@@ -3423,15 +3460,6 @@
                     const data = JSON.parse(e.target.result);
                     
                     if (data.transactions && Array.isArray(data.transactions)) {
-                        // Проверяем, есть ли уже данные
-                        if (transactions.length > 0 && !confirm(
-                            isRestore ? 
-                            'Восстановление данных заменит все текущие операции. Продолжить?' : 
-                            'Импорт данных заменит все текущие операции. Продолжить?'
-                        )) {
-                            return;
-                        }
-                        
                         transactions = data.transactions;
                         reserveBalance = data.reserveBalance || 0;
                         
@@ -3448,7 +3476,7 @@
                         updateDashboard();
                         updateReserveDisplay();
                         
-                        alert(isRestore ? 'Данные восстановлены успешно' : 'Данные импортированы успешно');
+                        alert(isRestore ? 'Данные успешно восстановлены!' : 'Данные успешно импортированы!');
                     } else {
                         alert('Неверный формат файла');
                     }
@@ -3458,7 +3486,7 @@
             };
             reader.readAsText(file);
             
-            // Сбрасываем значение input, чтобы можно было выбрать тот же файл снова
+            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова
             event.target.value = '';
         }
         
