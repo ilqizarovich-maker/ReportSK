@@ -1540,26 +1540,48 @@
 
         // Сохранение данных в Firebase
         async function saveToFirebase() {
-            if (!currentUser) return;
-            
-            try {
-                showFirebaseStatus('Сохранение данных в облако...', 'warning');
-                
-                const data = {
-                    transactions: transactions,
-                    reserveBalance: reserveBalance,
-                    lastUpdate: new Date().toISOString(),
-                    email: currentUser.email
-                };
-                
-                await db.collection('users').doc(currentUser.uid).set(data);
-                
-                showFirebaseStatus(`Данные успешно сохранены в облако (${transactions.length} операций)`, 'success');
-            } catch (error) {
-                console.error('Ошибка сохранения в Firebase:', error);
-                showFirebaseStatus(`Ошибка сохранения: ${error.message}`, 'error');
+    if (!currentUser) return;
+    
+    try {
+        showFirebaseStatus('Сохранение данных в облако...', 'warning');
+        
+        // Функция для рекурсивной очистки объекта от undefined
+        function removeUndefinedFields(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(item => 
+                    item && typeof item === 'object' ? removeUndefinedFields(item) : item
+                ).filter(item => item !== undefined);
+            } else if (obj && typeof obj === 'object') {
+                return Object.fromEntries(
+                    Object.entries(obj)
+                        .map(([key, value]) => [
+                            key, 
+                            value && typeof value === 'object' ? removeUndefinedFields(value) : value
+                        ])
+                        .filter(([_, value]) => value !== undefined)
+                );
             }
+            return obj;
         }
+        
+        // Очищаем данные перед отправкой
+        const cleanedTransactions = removeUndefinedFields(transactions);
+        
+        const data = removeUndefinedFields({
+            transactions: cleanedTransactions,
+            reserveBalance: reserveBalance,
+            lastUpdate: new Date().toISOString(),
+            email: currentUser.email
+        });
+        
+        await db.collection('users').doc(currentUser.uid).set(data);
+        
+        showFirebaseStatus(`Данные успешно сохранены в облако (${transactions.length} операций)`, 'success');
+    } catch (error) {
+        console.error('Ошибка сохранения в Firebase:', error);
+        showFirebaseStatus(`Ошибка сохранения: ${error.message}`, 'error');
+    }
+}
 
         // Показать статус Firebase
         function showFirebaseStatus(message, type) {
@@ -2065,37 +2087,51 @@
                 return;
             }
             
-            if (editingId) {
-                // Редактирование существующей операции
-                const index = transactions.findIndex(t => t.id === editingId);
-                if (index !== -1) {
-                    transactions[index] = {
-                        ...transactions[index],
-                        date,
-                        type,
-                        category,
-                        payment,
-                        amount,
-                        description,
-                        manualExpenseCategory: type === 'expense' ? expenseCategory : undefined
-                    };
-                }
-            } else {
-                // Добавление новой операции
-                const newTransaction = {
-                    id: Date.now().toString(),
-                    date,
-                    type,
-                    category,
-                    payment,
-                    amount,
-                    description,
-                    manualExpenseCategory: type === 'expense' ? expenseCategory : undefined,
-                    createdAt: new Date().toISOString()
-                };
-                
-                transactions.push(newTransaction);
-            }
+            // В функции saveTransaction:
+if (editingId) {
+    // Редактирование существующей операции
+    const index = transactions.findIndex(t => t.id === editingId);
+    if (index !== -1) {
+        transactions[index] = {
+            ...transactions[index],
+            date,
+            type,
+            category,
+            payment,
+            amount,
+            description,
+            manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null
+        };
+    }
+} else {
+    // Добавление новой операции
+    const newTransaction = {
+        id: Date.now().toString(),
+        date,
+        type,
+        category,
+        payment,
+        amount,
+        description,
+        manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null,
+        createdAt: new Date().toISOString()
+    };
+    
+    transactions.push(newTransaction);
+}
+
+// В функции saveReserveTransaction:
+const newTransaction = {
+    id: Date.now().toString(),
+    date: date,
+    type: 'expense',
+    category: 'reserve',
+    payment: 'reserve',
+    amount: amount,
+    description: description || 'Пополнение резервного фонда',
+    manualExpenseCategory: null, // Явно устанавливаем null вместо undefined
+    createdAt: new Date().toISOString()
+};
             
             // Сохраняем в localStorage
             localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
