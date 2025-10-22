@@ -616,6 +616,31 @@
             display: block;
         }
 
+        /* Стили для вкладки сохраненных расходов */
+        .saved-expense-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .saved-expense-info {
+            flex-grow: 1;
+        }
+
+        .saved-expense-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .saved-expense-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -654,6 +679,17 @@
             .cost-structure {
                 grid-template-columns: 1fr;
             }
+
+            .saved-expense-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .saved-expense-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
     </style>
 </head>
@@ -683,6 +719,7 @@
             <div class="tab active" data-tab="dashboard">Дашборд</div>
             <div class="tab" data-tab="transactions">Операции</div>
             <div class="tab" data-tab="reports">Отчеты</div>
+            <div class="tab" data-tab="saved-expenses">Сохраненные расходы</div>
             <div class="tab" data-tab="settings">Настройки</div>
         </div>
         
@@ -1015,11 +1052,11 @@
                     <label for="filter-payment">Способ оплаты</label>
                     <select id="filter-payment">
                         <option value="">Все способы</option>
-                        <option value="sultan_akbars">Карта Акбарсбанка (Султан)</option>
-                        <option value="sultan_sber">Яндекс на Сбер (Султан)</option>
+                        <option value="sultan_akbars">Счет АББ Султана</option>
+                        <option value="sultan_sber">Счет Сбер Султана</option>
                         <option value="chingiz_cash">Наличные (Чингиз)</option>
-                        <option value="chingiz_card">Перевод на карту Чингиза</option>
-                        <option value="sultan_sber_cash">Карта Сбер (Султан) - самообслуживание</option>
+                        <option value="chingiz_card">Счет Чингиза</option>
+                        <option value="sultan_sber_cash">Счет Сбер (Султан) - самообслуживание</option>
                         <option value="chingiz_cash_self">Наличные (Чингиз) - самообслуживание</option>
                         <option value="reserve">Резервный фонд Чингиза</option>
                     </select>
@@ -1118,6 +1155,70 @@
             </div>
         </div>
         
+        <!-- Новая вкладка: Сохраненные расходы -->
+        <div id="saved-expenses" class="tab-content">
+            <h2>Сохраненные расходы</h2>
+            <p>Создавайте и управляйте шаблонами часто используемых расходов для быстрого добавления операций.</p>
+            
+            <div class="saved-expense-form">
+                <h3>Добавить новый сохраненный расход</h3>
+                <div class="form-group">
+                    <label for="saved-expense-category">Категория</label>
+                    <select id="saved-expense-category" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="detailing">Детейлинг</option>
+                        <option value="self12">Самообслуживание (посты 1-2)</option>
+                        <option value="self35">Самообслуживание (посты 3-5)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="saved-expense-payment">Способ оплаты</label>
+                    <select id="saved-expense-payment" required>
+                        <option value="">Выберите способ оплаты</option>
+                        <option value="sultan_akbars">Счет АББ Султана</option>
+                        <option value="sultan_sber">Счет Сбер Султана</option>
+                        <option value="chingiz_cash">Наличные (Чингиз)</option>
+                        <option value="chingiz_card">Счет Чингиза</option>
+                        <option value="sultan_sber_cash">Счет Сбер (Султан) - самообслуживание</option>
+                        <option value="chingiz_cash_self">Наличные (Чингиз) - самообслуживание</option>
+                        <option value="reserve">Резервный фонд Чингиза</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="saved-expense-amount">Сумма (руб.)</label>
+                    <input type="number" id="saved-expense-amount" min="0" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="saved-expense-description">Описание</label>
+                    <textarea id="saved-expense-description" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="saved-expense-category-type">Категория расходов (для аналитики)</label>
+                    <select id="saved-expense-category-type">
+                        <option value="">Автоматическое определение</option>
+                        <option value="cogs">Себестоимость (COGS)</option>
+                        <option value="direct">Прямые затраты</option>
+                        <option value="indirect">Косвенные затраты</option>
+                        <option value="fixed">Постоянные затраты</option>
+                        <option value="variable">Переменные затраты</option>
+                    </select>
+                </div>
+                
+                <div class="actions">
+                    <button id="add-saved-expense-btn" class="btn-secondary">Сохранить шаблон</button>
+                </div>
+            </div>
+            
+            <h3>Сохраненные шаблоны расходов</h3>
+            <div id="saved-expenses-list">
+                <!-- Список сохраненных расходов будет загружен здесь -->
+            </div>
+        </div>
+        
         <!-- Настройки -->
         <div id="settings" class="tab-content">
             <h2>Настройки</h2>
@@ -1167,7 +1268,7 @@
             
             <div class="form-group">
                 <h3>О программе</h3>
-                <p>Версия 6.0 (Firebase Cloud Sync)</p>
+                <p>Версия 6.1 (Firebase Cloud Sync + Сохраненные расходы)</p>
                 <p>2025 Разработано для SK-Detailing by Chingiz</p>
             </div>
         </div>
@@ -1254,11 +1355,11 @@
                     <label for="transaction-payment">Способ оплаты</label>
                     <select id="transaction-payment" required>
                         <option value="">Выберите способ оплаты</option>
-                        <option value="sultan_akbars">Карта Акбарсбанка (Султан)</option>
-                        <option value="sultan_sber">Яндекс на Сбер (Султан)</option>
+                        <option value="sultan_akbars">Счет АББ Султана</option>
+                        <option value="sultan_sber">Счет Сбер Султана</option>
                         <option value="chingiz_cash">Наличные (Чингиз)</option>
-                        <option value="chingiz_card">Перевод на карту Чингиза</option>
-                        <option value="sultan_sber_cash">Карта Сбер (Султан) - самообслуживание</option>
+                        <option value="chingiz_card">Счет Чингиза</option>
+                        <option value="sultan_sber_cash">Счет Сбер (Султан) - самообслуживание</option>
                         <option value="chingiz_cash_self">Наличные (Чингиз) - самообслуживание</option>
                         <option value="reserve">Резервный фонд Чингиза</option>
                     </select>
@@ -1286,6 +1387,14 @@
                         <option value="variable">Переменные затраты</option>
                     </select>
                     <small id="expense-category-auto"></small>
+                </div>
+
+                <!-- Поле для выбора сохраненного расхода -->
+                <div class="form-group" id="saved-expense-group" style="display: none;">
+                    <label for="saved-expense-select">Использовать сохраненный расход</label>
+                    <select id="saved-expense-select">
+                        <option value="">Выберите шаблон</option>
+                    </select>
                 </div>
                 
                 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
@@ -1381,6 +1490,7 @@
         // Основные переменные
         let transactions = JSON.parse(localStorage.getItem('carwash_transactions')) || [];
         let reserveBalance = parseFloat(localStorage.getItem('carwash_reserve')) || 0;
+        let savedExpenses = JSON.parse(localStorage.getItem('carwash_saved_expenses')) || [];
         let editingId = null;
         let reserveAction = null;
         let incomeExpenseChart = null;
@@ -1457,6 +1567,7 @@
             updateDashboard();
             updateReserveDisplay();
             renderExpenseClassification();
+            renderSavedExpenses();
         });
 
         // Инициализация Firebase Auth
@@ -1515,16 +1626,19 @@
                     // Сохраняем данные из Firebase
                     transactions = data.transactions || [];
                     reserveBalance = data.reserveBalance || 0;
+                    savedExpenses = data.savedExpenses || [];
                     
                     // Сохраняем в localStorage
                     localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
                     localStorage.setItem('carwash_reserve', reserveBalance.toString());
+                    localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                     
                     // Обновляем интерфейс
                     renderTransactions();
                     updateDashboard();
                     updateReserveDisplay();
                     renderExpenseClassification();
+                    renderSavedExpenses();
                     
                     showFirebaseStatus(`Данные успешно загружены (${transactions.length} операций)`, 'success');
                 } else {
@@ -1540,48 +1654,50 @@
 
         // Сохранение данных в Firebase
         async function saveToFirebase() {
-    if (!currentUser) return;
-    
-    try {
-        showFirebaseStatus('Сохранение данных в облако...', 'warning');
-        
-        // Функция для рекурсивной очистки объекта от undefined
-        function removeUndefinedFields(obj) {
-            if (Array.isArray(obj)) {
-                return obj.map(item => 
-                    item && typeof item === 'object' ? removeUndefinedFields(item) : item
-                ).filter(item => item !== undefined);
-            } else if (obj && typeof obj === 'object') {
-                return Object.fromEntries(
-                    Object.entries(obj)
-                        .map(([key, value]) => [
-                            key, 
-                            value && typeof value === 'object' ? removeUndefinedFields(value) : value
-                        ])
-                        .filter(([_, value]) => value !== undefined)
-                );
+            if (!currentUser) return;
+            
+            try {
+                showFirebaseStatus('Сохранение данных в облако...', 'warning');
+                
+                // Функция для рекурсивной очистки объекта от undefined
+                function removeUndefinedFields(obj) {
+                    if (Array.isArray(obj)) {
+                        return obj.map(item => 
+                            item && typeof item === 'object' ? removeUndefinedFields(item) : item
+                        ).filter(item => item !== undefined);
+                    } else if (obj && typeof obj === 'object') {
+                        return Object.fromEntries(
+                            Object.entries(obj)
+                                .map(([key, value]) => [
+                                    key, 
+                                    value && typeof value === 'object' ? removeUndefinedFields(value) : value
+                                ])
+                                .filter(([_, value]) => value !== undefined)
+                        );
+                    }
+                    return obj;
+                }
+                
+                // Очищаем данные перед отправкой
+                const cleanedTransactions = removeUndefinedFields(transactions);
+                const cleanedSavedExpenses = removeUndefinedFields(savedExpenses);
+                
+                const data = removeUndefinedFields({
+                    transactions: cleanedTransactions,
+                    savedExpenses: cleanedSavedExpenses,
+                    reserveBalance: reserveBalance,
+                    lastUpdate: new Date().toISOString(),
+                    email: currentUser.email
+                });
+                
+                await db.collection('users').doc(currentUser.uid).set(data);
+                
+                showFirebaseStatus(`Данные успешно сохранены в облако (${transactions.length} операций)`, 'success');
+            } catch (error) {
+                console.error('Ошибка сохранения в Firebase:', error);
+                showFirebaseStatus(`Ошибка сохранения: ${error.message}`, 'error');
             }
-            return obj;
         }
-        
-        // Очищаем данные перед отправкой
-        const cleanedTransactions = removeUndefinedFields(transactions);
-        
-        const data = removeUndefinedFields({
-            transactions: cleanedTransactions,
-            reserveBalance: reserveBalance,
-            lastUpdate: new Date().toISOString(),
-            email: currentUser.email
-        });
-        
-        await db.collection('users').doc(currentUser.uid).set(data);
-        
-        showFirebaseStatus(`Данные успешно сохранены в облако (${transactions.length} операций)`, 'success');
-    } catch (error) {
-        console.error('Ошибка сохранения в Firebase:', error);
-        showFirebaseStatus(`Ошибка сохранения: ${error.message}`, 'error');
-    }
-}
 
         // Показать статус Firebase
         function showFirebaseStatus(message, type) {
@@ -1610,6 +1726,11 @@
                     // При переключении на вкладку операций обновляем таблицу классификации
                     if (this.dataset.tab === 'transactions') {
                         renderExpenseClassification();
+                    }
+                    
+                    // При переключении на вкладку сохраненных расходов обновляем список
+                    if (this.dataset.tab === 'saved-expenses') {
+                        renderSavedExpenses();
                     }
                 });
             });
@@ -1757,8 +1878,13 @@
             // Обработчик изменения типа операции в модальном окне
             document.getElementById('transaction-type').addEventListener('change', function() {
                 const expenseCategoryGroup = document.getElementById('expense-category-group');
+                const savedExpenseGroup = document.getElementById('saved-expense-group');
+                
                 if (this.value === 'expense') {
                     expenseCategoryGroup.style.display = 'block';
+                    savedExpenseGroup.style.display = 'block';
+                    updateSavedExpenseSelect();
+                    
                     // Показываем автоматическую категорию на основе описания
                     const description = document.getElementById('transaction-description').value;
                     if (description) {
@@ -1767,6 +1893,7 @@
                     }
                 } else {
                     expenseCategoryGroup.style.display = 'none';
+                    savedExpenseGroup.style.display = 'none';
                 }
             });
 
@@ -1776,6 +1903,25 @@
                 if (transactionType === 'expense') {
                     const autoCategory = classifyExpense(this.value);
                     document.getElementById('expense-category-auto').textContent = `Автоматически: ${getExpenseCategoryName(autoCategory)}`;
+                }
+            });
+
+            // Обработчик выбора сохраненного расхода
+            document.getElementById('saved-expense-select').addEventListener('change', function() {
+                const selectedId = this.value;
+                if (selectedId) {
+                    const savedExpense = savedExpenses.find(exp => exp.id === selectedId);
+                    if (savedExpense) {
+                        document.getElementById('transaction-category').value = savedExpense.category;
+                        document.getElementById('transaction-payment').value = savedExpense.payment;
+                        document.getElementById('transaction-amount').value = savedExpense.amount || '';
+                        document.getElementById('transaction-description').value = savedExpense.description;
+                        document.getElementById('transaction-expense-category').value = savedExpense.expenseCategory || '';
+                        
+                        // Обновляем автоматическую категорию
+                        const autoCategory = classifyExpense(savedExpense.description);
+                        document.getElementById('expense-category-auto').textContent = `Автоматически: ${getExpenseCategoryName(autoCategory)}`;
+                    }
                 }
             });
             
@@ -1843,6 +1989,156 @@
             document.getElementById('save-expense-category-btn').addEventListener('click', function() {
                 saveExpenseCategory();
             });
+
+            // Обработчики для сохраненных расходов
+            document.getElementById('add-saved-expense-btn').addEventListener('click', function() {
+                addSavedExpense();
+            });
+        }
+
+        // Обновление выпадающего списка сохраненных расходов
+        function updateSavedExpenseSelect() {
+            const select = document.getElementById('saved-expense-select');
+            select.innerHTML = '<option value="">Выберите шаблон</option>';
+            
+            savedExpenses.forEach(expense => {
+                const option = document.createElement('option');
+                option.value = expense.id;
+                option.textContent = `${expense.description} (${getCategoryLabel(expense.category)})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Добавление сохраненного расхода
+        function addSavedExpense() {
+            const category = document.getElementById('saved-expense-category').value;
+            const payment = document.getElementById('saved-expense-payment').value;
+            const amount = document.getElementById('saved-expense-amount').value;
+            const description = document.getElementById('saved-expense-description').value;
+            const expenseCategory = document.getElementById('saved-expense-category-type').value;
+            
+            if (!category || !payment || !description) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            const newSavedExpense = {
+                id: Date.now().toString(),
+                category,
+                payment,
+                amount: amount ? parseFloat(amount) : null,
+                description,
+                expenseCategory,
+                createdAt: new Date().toISOString()
+            };
+            
+            savedExpenses.push(newSavedExpense);
+            
+            // Сохраняем в localStorage
+            localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
+            
+            // Сохраняем в Firebase, если пользователь авторизован
+            if (currentUser) {
+                saveToFirebase();
+            }
+            
+            // Очищаем форму
+            document.getElementById('saved-expense-category').value = '';
+            document.getElementById('saved-expense-payment').value = '';
+            document.getElementById('saved-expense-amount').value = '';
+            document.getElementById('saved-expense-description').value = '';
+            document.getElementById('saved-expense-category-type').value = '';
+            
+            // Обновляем интерфейс
+            renderSavedExpenses();
+            
+            alert('Шаблон расхода успешно сохранен!');
+        }
+
+        // Удаление сохраненного расхода
+        function deleteSavedExpense(id) {
+            if (confirm('Вы уверены, что хотите удалить этот шаблон расхода?')) {
+                savedExpenses = savedExpenses.filter(exp => exp.id !== id);
+                
+                // Сохраняем в localStorage
+                localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
+                
+                // Сохраняем в Firebase, если пользователь авторизован
+                if (currentUser) {
+                    saveToFirebase();
+                }
+                
+                // Обновляем интерфейс
+                renderSavedExpenses();
+            }
+        }
+
+        // Отображение сохраненных расходов
+        function renderSavedExpenses() {
+            const container = document.getElementById('saved-expenses-list');
+            
+            if (savedExpenses.length === 0) {
+                container.innerHTML = '<p>Нет сохраненных шаблонов расходов</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            savedExpenses.forEach(expense => {
+                const item = document.createElement('div');
+                item.className = 'saved-expense-item';
+                
+                item.innerHTML = `
+                    <div class="saved-expense-info">
+                        <strong>${expense.description}</strong>
+                        <div>Категория: ${getCategoryLabel(expense.category)}</div>
+                        <div>Способ оплаты: ${getPaymentLabel(expense.payment)}</div>
+                        ${expense.amount ? `<div>Сумма: ${expense.amount.toFixed(2)} руб.</div>` : ''}
+                        ${expense.expenseCategory ? `<div>Категория расходов: ${getExpenseCategoryName(expense.expenseCategory)}</div>` : ''}
+                    </div>
+                    <div class="saved-expense-actions">
+                        <button onclick="useSavedExpense('${expense.id}')">Использовать</button>
+                        <button onclick="deleteSavedExpense('${expense.id}')" class="btn-danger">Удалить</button>
+                    </div>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Использование сохраненного расхода
+        function useSavedExpense(id) {
+            const expense = savedExpenses.find(exp => exp.id === id);
+            if (!expense) return;
+            
+            // Переключаемся на вкладку операций
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            document.querySelector('.tab[data-tab="transactions"]').classList.add('active');
+            document.getElementById('transactions').classList.add('active');
+            
+            // Открываем модальное окно для добавления операции
+            showTransactionModal();
+            
+            // Заполняем форму данными из сохраненного расхода
+            document.getElementById('transaction-type').value = 'expense';
+            document.getElementById('transaction-category').value = expense.category;
+            document.getElementById('transaction-payment').value = expense.payment;
+            document.getElementById('transaction-amount').value = expense.amount || '';
+            document.getElementById('transaction-description').value = expense.description;
+            document.getElementById('transaction-expense-category').value = expense.expenseCategory || '';
+            
+            // Обновляем видимость полей
+            document.getElementById('expense-category-group').style.display = 'block';
+            document.getElementById('saved-expense-group').style.display = 'block';
+            
+            // Обновляем автоматическую категорию
+            const autoCategory = classifyExpense(expense.description);
+            document.getElementById('expense-category-auto').textContent = `Автоматически: ${getExpenseCategoryName(autoCategory)}`;
+            
+            // Обновляем список сохраненных расходов
+            updateSavedExpenseSelect();
         }
 
         // Показать модальное окно для изменения категории расходов
@@ -1931,6 +2227,7 @@
             const modal = document.getElementById('transaction-modal');
             const title = document.getElementById('modal-title');
             const expenseCategoryGroup = document.getElementById('expense-category-group');
+            const savedExpenseGroup = document.getElementById('saved-expense-group');
             
             if (id) {
                 title.textContent = 'Редактировать операцию';
@@ -1946,13 +2243,18 @@
                 // Устанавливаем значение категории расходов, если операция - расход
                 if (transaction.type === 'expense') {
                     expenseCategoryGroup.style.display = 'block';
+                    savedExpenseGroup.style.display = 'block';
                     document.getElementById('transaction-expense-category').value = transaction.manualExpenseCategory || '';
                     
                     // Показываем автоматическую категорию
                     const autoCategory = classifyExpense(transaction.description);
                     document.getElementById('expense-category-auto').textContent = `Автоматически: ${getExpenseCategoryName(autoCategory)}`;
+                    
+                    // Обновляем список сохраненных расходов
+                    updateSavedExpenseSelect();
                 } else {
                     expenseCategoryGroup.style.display = 'none';
+                    savedExpenseGroup.style.display = 'none';
                 }
             } else {
                 title.textContent = 'Добавить операцию';
@@ -1964,6 +2266,7 @@
                 document.getElementById('transaction-description').value = '';
                 document.getElementById('transaction-expense-category').value = '';
                 expenseCategoryGroup.style.display = 'none';
+                savedExpenseGroup.style.display = 'none';
             }
             
             modal.style.display = 'block';
@@ -2023,7 +2326,8 @@
                     payment: 'reserve',
                     amount: amount,
                     description: description || 'Пополнение резервного фонда',
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    manualExpenseCategory: null
                 };
                 
                 transactions.push(newTransaction);
@@ -2044,7 +2348,8 @@
                     payment: 'reserve',
                     amount: amount,
                     description: description || 'Списание с резервного фонда',
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    manualExpenseCategory: null
                 };
                 
                 transactions.push(newTransaction);
@@ -2087,51 +2392,37 @@
                 return;
             }
             
-            // В функции saveTransaction:
-if (editingId) {
-    // Редактирование существующей операции
-    const index = transactions.findIndex(t => t.id === editingId);
-    if (index !== -1) {
-        transactions[index] = {
-            ...transactions[index],
-            date,
-            type,
-            category,
-            payment,
-            amount,
-            description,
-            manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null
-        };
-    }
-} else {
-    // Добавление новой операции
-    const newTransaction = {
-        id: Date.now().toString(),
-        date,
-        type,
-        category,
-        payment,
-        amount,
-        description,
-        manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null,
-        createdAt: new Date().toISOString()
-    };
-    
-    transactions.push(newTransaction);
-}
-
-// В функции saveReserveTransaction:
-const newTransaction = {
-    id: Date.now().toString(),
-    date: date,
-    type: 'expense',
-    category: 'reserve',
-    payment: 'reserve',
-    amount: amount,
-    description: description || 'Пополнение резервного фонда',
-    manualExpenseCategory: null, // Явно устанавливаем null вместо undefined
-    createdAt: new Date().toISOString()
-};
+            if (editingId) {
+                // Редактирование существующей операции
+                const index = transactions.findIndex(t => t.id === editingId);
+                if (index !== -1) {
+                    transactions[index] = {
+                        ...transactions[index],
+                        date,
+                        type,
+                        category,
+                        payment,
+                        amount,
+                        description,
+                        manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null
+                    };
+                }
+            } else {
+                // Добавление новой операции
+                const newTransaction = {
+                    id: Date.now().toString(),
+                    date,
+                    type,
+                    category,
+                    payment,
+                    amount,
+                    description,
+                    manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null,
+                    createdAt: new Date().toISOString()
+                };
+                
+                transactions.push(newTransaction);
+            }
             
             // Сохраняем в localStorage
             localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
@@ -2945,11 +3236,11 @@ const newTransaction = {
                 type: 'doughnut',
                 data: {
                     labels: [
-                        'Карта Акбарсбанка (Султан)',
-                        'Яндекс на Сбер (Султан)',
+                        'Счет АББ Султана',
+                        'Счет Сбер Султана',
                         'Наличные (Чингиз)',
-                        'Перевод на карту Чингиза',
-                        'Карта Сбер (Султан) - самообслуживание',
+                        'Счет Чингиза',
+                        'Счет Сбер (Султан) - самообслуживание',
                         'Наличные (Чингиз) - самообслуживание',
                         'Резервный фонд Чингиза'
                     ],
@@ -3050,6 +3341,28 @@ const newTransaction = {
             const incomeTransactions = reportTransactions.filter(t => t.type === 'income');
             const expenseTransactions = reportTransactions.filter(t => t.type === 'expense');
             
+            // Расчет доходов и расходов по счетам
+            let sultanIncome = 0;
+            let chingizIncome = 0;
+            let sultanExpense = 0;
+            let chingizExpense = 0;
+            
+            incomeTransactions.forEach(t => {
+                if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                    sultanIncome += t.amount;
+                } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                    chingizIncome += t.amount;
+                }
+            });
+            
+            expenseTransactions.forEach(t => {
+                if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                    sultanExpense += t.amount;
+                } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                    chingizExpense += t.amount;
+                }
+            });
+            
             // Форматирование дат для отображения
             const formatDateForReport = (date) => {
                 return date.toLocaleDateString('ru-RU');
@@ -3125,141 +3438,84 @@ const newTransaction = {
                         <p>${mutualSettlement > 0 ? 'Султан должен перевести Чингизу' : mutualSettlement < 0 ? 'Чингиз должен перевести Султану' : 'Расчеты сбалансированы'}</p>
                     </div>
                     
-                    <h3 class="section-title">Доходы (${incomeTransactions.length} операций)</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Категория</th>
-                                <th>Способ оплаты</th>
-                                <th>Сумма</th>
-                                <th>Описание</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${incomeTransactions.map(t => `
-                                <tr>
-                                    <td>${formatDate(t.date)}</td>
-                                    <td>${getCategoryLabel(t.category)}</td>
-                                    <td>${getPaymentLabel(t.payment)}</td>
-                                    <td>${t.amount.toFixed(2)} руб.</td>
-                                    <td>${t.description || ''}</td>
-                                </tr>
-                            `).join('')}
-                            <tr style="font-weight: bold;">
-                                <td colspan="3">ИТОГО:</td>
-                                <td>${incomeTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <h3 class="section-title">Расходы (${expenseTransactions.length} операций)</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Категория</th>
-                                <th>Способ оплаты</th>
-                                <th>Сумма</th>
-                                <th>Описание</th>
-                                <th>Категория расходов</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${expenseTransactions.map(t => {
-                                const manualCategory = t.manualExpenseCategory;
-                                const autoCategory = classifyExpense(t.description);
-                                const expenseCategory = manualCategory ? 
-                                    `${getExpenseCategoryName(manualCategory)} (ручная)` : 
-                                    `${getExpenseCategoryName(autoCategory)} (авто)`;
-                                
-                                return `
-                                <tr>
-                                    <td>${formatDate(t.date)}</td>
-                                    <td>${getCategoryLabel(t.category)}</td>
-                                    <td>${getPaymentLabel(t.payment)}</td>
-                                    <td>${t.amount.toFixed(2)} руб.</td>
-                                    <td>${t.description || ''}</td>
-                                    <td>${expenseCategory}</td>
-                                </tr>
-                                `;
-                            }).join('')}
-                            <tr style="font-weight: bold;">
-                                <td colspan="3">ИТОГО:</td>
-                                <td>${expenseTransactions.reduce((sum, t) => sum + t.amount, 0).toFixed(2)} руб.</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <h3 class="section-title">Анализ рентабельности</h3>
-                    <div class="profit-breakdown">
-                        <div class="breakdown-card">
-                            <h4>Детейлинг</h4>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Валовая маржа:</span>
-                                    <span>${advancedAnalysis.detailing.grossMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Чистая маржа:</span>
-                                    <span>${advancedAnalysis.detailing.netMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span>${advancedAnalysis.detailing.costOfGoodsSold.toFixed(2)} руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span>${advancedAnalysis.detailing.operatingExpenses.toFixed(2)} руб.</span>
-                                </div>
-                            </div>
+                    <h3 class="section-title">Доходы по счетам</h3>
+                    <div class="summary-cards">
+                        <div class="card">
+                            <h3>Счета Султана</h3>
+                            <div class="card-value">${sultanIncome.toFixed(2)} руб.</div>
+                            <p>Получено на счета Султана</p>
                         </div>
                         
-                        <div class="breakdown-card">
-                            <h4>Посты 1-2</h4>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Валовая маржа:</span>
-                                    <span>${advancedAnalysis.self12.grossMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Чистая маржа:</span>
-                                    <span>${advancedAnalysis.self12.netMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span>${advancedAnalysis.self12.costOfGoodsSold.toFixed(2)} руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span>${advancedAnalysis.self12.operatingExpenses.toFixed(2)} руб.</span>
-                                </div>
-                            </div>
+                        <div class="card">
+                            <h3>Счета Чингиза</h3>
+                            <div class="card-value">${chingizIncome.toFixed(2)} руб.</div>
+                            <p>Получено на счета Чингиза</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-title">Расходы по счетам</h3>
+                    <div class="summary-cards">
+                        <div class="card">
+                            <h3>Расходы Султана</h3>
+                            <div class="card-value">${sultanExpense.toFixed(2)} руб.</div>
+                            <p>Потрачено с счетов Султана</p>
                         </div>
                         
-                        <div class="breakdown-card">
-                            <h4>Посты 3-5</h4>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Валовая маржа:</span>
-                                    <span>${advancedAnalysis.self35.grossMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Чистая маржа:</span>
-                                    <span>${advancedAnalysis.self35.netMargin.toFixed(1)}%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span>${advancedAnalysis.self35.costOfGoodsSold.toFixed(2)} руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span>${advancedAnalysis.self35.operatingExpenses.toFixed(2)} руб.</span>
-                                </div>
-                            </div>
+                        <div class="card">
+                            <h3>Расходы Чингиза</h3>
+                            <div class="card-value">${chingizExpense.toFixed(2)} руб.</div>
+                            <p>Потрачено с счетов Чингиза</p>
+                        </div>
+                    </div>
+                    
+                    <h3 class="section-title">Детализация операций</h3>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 300px;">
+                            <h4>Доходы</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Категория</th>
+                                        <th>Сумма</th>
+                                        <th>Способ оплаты</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${incomeTransactions.map(t => `
+                                        <tr>
+                                            <td>${formatDate(t.date)}</td>
+                                            <td>${getCategoryLabel(t.category)}</td>
+                                            <td>${t.amount.toFixed(2)} руб.</td>
+                                            <td>${getPaymentLabel(t.payment)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 300px;">
+                            <h4>Расходы</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Категория</th>
+                                        <th>Сумма</th>
+                                        <th>Способ оплаты</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${expenseTransactions.map(t => `
+                                        <tr>
+                                            <td>${formatDate(t.date)}</td>
+                                            <td>${getCategoryLabel(t.category)}</td>
+                                            <td>${t.amount.toFixed(2)} руб.</td>
+                                            <td>${getPaymentLabel(t.payment)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -3269,12 +3525,34 @@ const newTransaction = {
         // Сохранение отчета
         function saveReport() {
             const reportContent = document.getElementById('report-content').innerHTML;
-            const blob = new Blob([reportContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
+            const blob = new Blob([`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Отчет автомойки</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
+                        .summary-cards { display: flex; flex-wrap: wrap; gap: 15px; }
+                        .card-value { font-size: 24px; font-weight: bold; margin: 10px 0; }
+                        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        .settlement-card { background: #3498db; color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+                        .settlement-amount { font-size: 32px; font-weight: bold; margin: 15px 0; }
+                    </style>
+                </head>
+                <body>
+                    ${reportContent}
+                </body>
+                </html>
+            `], { type: 'text/html' });
             
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Отчет_${new Date().toISOString().slice(0, 10)}.html`;
+            a.download = `отчет_автомойки_${new Date().toISOString().split('T')[0]}.html`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -3283,7 +3561,6 @@ const newTransaction = {
         
         // Экспорт отчета в Excel
         function exportReportToExcel() {
-            // Получаем те же данные, что и для отчета
             const reportPeriod = document.getElementById('report-period').value;
             const reportMonth = document.getElementById('report-month').value;
             
@@ -3336,44 +3613,30 @@ const newTransaction = {
             // Создание книги Excel
             const wb = XLSX.utils.book_new();
             
-            // Лист с итогами
+            // Лист с итоговыми показателями
             const summaryData = [
-                ['Отчет за период:', `${formatDate(startDate)} - ${formatDate(endDate)}`],
-                [''],
-                ['Детейлинг', ''],
-                ['Доходы', detailingIncome],
-                ['Расходы', detailingExpense],
-                ['Чистая прибыль', detailingNet],
-                ['Доля Чингиза', detailingNet / 2],
-                ['Доля Султана', detailingNet / 2],
-                [''],
-                ['Самообслуживание (посты 1-2)', ''],
-                ['Доходы', self12Income],
-                ['Расходы', self12Expense],
-                ['Чистая прибыль', self12Net],
-                ['Доля Чингиза', self12Net / 2],
-                ['Доля Султана', self12Net / 2],
-                [''],
-                ['Самообслуживание (посты 3-5)', ''],
-                ['Доходы', self35Income],
-                ['Расходы', self35Expense],
-                ['Чистая прибыль', self35Net],
-                ['Принадлежит Султану', self35Net],
-                [''],
-                ['Итоги', ''],
+                ['Показатель', 'Сумма (руб.)'],
+                ['Детейлинг - Доходы', detailingIncome],
+                ['Детейлинг - Расходы', detailingExpense],
+                ['Детейлинг - Чистая прибыль', detailingNet],
+                ['Самообслуживание 1-2 - Доходы', self12Income],
+                ['Самообслуживание 1-2 - Расходы', self12Expense],
+                ['Самообслуживание 1-2 - Чистая прибыль', self12Net],
+                ['Самообслуживание 3-5 - Доходы', self35Income],
+                ['Самообслуживание 3-5 - Расходы', self35Expense],
+                ['Самообслуживание 3-5 - Чистая прибыль', self35Net],
                 ['Прибыль Чингиза', chingizProfit],
                 ['Прибыль Султана', sultanProfit],
                 ['Общая прибыль', totalProfit],
-                ['Взаимные расчеты', mutualSettlement],
-                ['', mutualSettlement > 0 ? 'Султан должен Чингизу' : mutualSettlement < 0 ? 'Чингиз должен Султану' : 'Сбалансировано']
+                ['Взаимные расчеты', mutualSettlement]
             ];
             
-            const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, wsSummary, 'Итоги');
+            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, summaryWs, 'Итоги');
             
             // Лист с доходами
             const incomeData = [
-                ['Дата', 'Категория', 'Способ оплаты', 'Сумма', 'Описание']
+                ['Дата', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание']
             ];
             
             reportTransactions
@@ -3388,54 +3651,44 @@ const newTransaction = {
                     ]);
                 });
             
-            incomeData.push(['ИТОГО:', '', '', reportTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)]);
-            
-            const wsIncome = XLSX.utils.aoa_to_sheet(incomeData);
-            XLSX.utils.book_append_sheet(wb, wsIncome, 'Доходы');
+            const incomeWs = XLSX.utils.aoa_to_sheet(incomeData);
+            XLSX.utils.book_append_sheet(wb, incomeWs, 'Доходы');
             
             // Лист с расходами
             const expenseData = [
-                ['Дата', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
+                ['Дата', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание']
             ];
             
             reportTransactions
                 .filter(t => t.type === 'expense')
                 .forEach(t => {
-                    const manualCategory = t.manualExpenseCategory;
-                    const autoCategory = classifyExpense(t.description);
-                    const expenseCategory = manualCategory ? 
-                        `${getExpenseCategoryName(manualCategory)} (ручная)` : 
-                        `${getExpenseCategoryName(autoCategory)} (авто)`;
-                    
                     expenseData.push([
                         t.date,
                         getCategoryLabel(t.category),
                         getPaymentLabel(t.payment),
                         t.amount,
-                        t.description || '',
-                        expenseCategory
+                        t.description || ''
                     ]);
                 });
             
-            expenseData.push(['ИТОГО:', '', '', reportTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0), '', '']);
-            
-            const wsExpense = XLSX.utils.aoa_to_sheet(expenseData);
-            XLSX.utils.book_append_sheet(wb, wsExpense, 'Расходы');
+            const expenseWs = XLSX.utils.aoa_to_sheet(expenseData);
+            XLSX.utils.book_append_sheet(wb, expenseWs, 'Расходы');
             
             // Сохранение файла
-            XLSX.writeFile(wb, `Отчет_${formatDate(startDate)}_${formatDate(endDate)}.xlsx`);
+            XLSX.writeFile(wb, `отчет_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
         
-        // Экспорт в Excel
+        // Экспорт всех данных в Excel
         function exportToExcel() {
             const wb = XLSX.utils.book_new();
             
-            // Данные операций
-            const data = [
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
+            // Лист с транзакциями
+            const transactionData = [
+                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание', 'Категория расходов']
             ];
             
             transactions.forEach(t => {
+                // Определяем категорию расходов для отображения
                 let expenseCategoryDisplay = '';
                 if (t.type === 'expense') {
                     const manualCategory = t.manualExpenseCategory;
@@ -3447,7 +3700,7 @@ const newTransaction = {
                     }
                 }
                 
-                data.push([
+                transactionData.push([
                     t.date,
                     getTypeLabel(t.type),
                     getCategoryLabel(t.category),
@@ -3458,10 +3711,11 @@ const newTransaction = {
                 ]);
             });
             
-            const ws = XLSX.utils.aoa_to_sheet(data);
-            XLSX.utils.book_append_sheet(wb, ws, 'Операции');
+            const ws = XLSX.utils.aoa_to_sheet(transactionData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Транзакции');
             
-            XLSX.writeFile(wb, `Операции_автомойки_${new Date().toISOString().slice(0, 10)}.xlsx`);
+            // Сохранение файла
+            XLSX.writeFile(wb, `данные_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
         
         // Экспорт данных
@@ -3469,16 +3723,17 @@ const newTransaction = {
             const data = {
                 transactions: transactions,
                 reserveBalance: reserveBalance,
-                exportDate: new Date().toISOString(),
-                version: '6.0'
+                savedExpenses: savedExpenses,
+                exportDate: new Date().toISOString()
             };
             
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
             const a = document.createElement('a');
             a.href = url;
-            a.download = isBackup ? `backup_${new Date().toISOString().slice(0, 10)}.json` : 'carwash_data.json';
+            a.download = isBackup ? 
+                `резервная_копия_автомойки_${new Date().toISOString().split('T')[0]}.json` : 
+                `данные_автомойки_${new Date().toISOString().split('T')[0]}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -3495,35 +3750,50 @@ const newTransaction = {
                 try {
                     const data = JSON.parse(e.target.result);
                     
-                    if (data.transactions && Array.isArray(data.transactions)) {
-                        transactions = data.transactions;
-                        reserveBalance = data.reserveBalance || 0;
-                        
-                        localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
-                        localStorage.setItem('carwash_reserve', reserveBalance.toString());
-                        
-                        // Сохраняем в Firebase, если пользователь авторизован
-                        if (currentUser) {
-                            saveToFirebase();
-                        }
-                        
-                        renderTransactions();
-                        renderExpenseClassification();
-                        updateDashboard();
-                        updateReserveDisplay();
-                        
-                        alert(isRestore ? 'Данные успешно восстановлены!' : 'Данные успешно импортированы!');
+                    if (isRestore) {
+                        // Полное восстановление из резервной копии
+                        if (data.transactions) transactions = data.transactions;
+                        if (data.reserveBalance !== undefined) reserveBalance = data.reserveBalance;
+                        if (data.savedExpenses) savedExpenses = data.savedExpenses;
                     } else {
-                        alert('Неверный формат файла');
+                        // Импорт транзакций
+                        if (data.transactions) {
+                            // Добавляем новые транзакции, избегая дубликатов
+                            const existingIds = transactions.map(t => t.id);
+                            const newTransactions = data.transactions.filter(t => !existingIds.includes(t.id));
+                            transactions = [...transactions, ...newTransactions];
+                        }
                     }
+                    
+                    // Сохраняем в localStorage
+                    localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
+                    localStorage.setItem('carwash_reserve', reserveBalance.toString());
+                    localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
+                    
+                    // Сохраняем в Firebase, если пользователь авторизован
+                    if (currentUser) {
+                        saveToFirebase();
+                    }
+                    
+                    // Обновляем интерфейс
+                    renderTransactions();
+                    renderExpenseClassification();
+                    updateDashboard();
+                    updateReserveDisplay();
+                    renderSavedExpenses();
+                    
+                    alert(isRestore ? 
+                        'Данные успешно восстановлены из резервной копии!' : 
+                        'Данные успешно импортированы!');
+                        
                 } catch (error) {
-                    alert('Ошибка при чтении файла: ' + error.message);
+                    alert('Ошибка при импорте данных: ' + error.message);
                 }
+                
+                // Очищаем поле ввода файла
+                event.target.value = '';
             };
             reader.readAsText(file);
-            
-            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова
-            event.target.value = '';
         }
         
         // Вспомогательные функции
@@ -3543,8 +3813,8 @@ const newTransaction = {
         function getCategoryLabel(category) {
             const categories = {
                 'detailing': 'Детейлинг',
-                'self12': 'Самообслуживание (1-2)',
-                'self35': 'Самообслуживание (3-5)',
+                'self12': 'Самообслуживание (посты 1-2)',
+                'self35': 'Самообслуживание (посты 3-5)',
                 'reserve': 'Резервный фонд'
             };
             return categories[category] || category;
@@ -3552,11 +3822,11 @@ const newTransaction = {
         
         function getPaymentLabel(payment) {
             const payments = {
-                'sultan_akbars': 'Карта Акбарсбанка (Султан)',
-                'sultan_sber': 'Яндекс на Сбер (Султан)',
+                'sultan_akbars': 'Счет АББ Султана',
+                'sultan_sber': 'Счет Сбер Султана',
                 'chingiz_cash': 'Наличные (Чингиз)',
-                'chingiz_card': 'Перевод на карту Чингиза',
-                'sultan_sber_cash': 'Карта Сбер (Султан) - самообслуживание',
+                'chingiz_card': 'Счет Чингиза',
+                'sultan_sber_cash': 'Счет Сбер (Султан) - самообслуживание',
                 'chingiz_cash_self': 'Наличные (Чингиз) - самообслуживание',
                 'reserve': 'Резервный фонд Чингиза'
             };
