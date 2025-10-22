@@ -12,16 +12,19 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <style>
         :root {
-            --primary: #3498db;
-            --secondary: #2ecc71;
-            --dark: #2c3e50;
-            --light: #ecf0f1;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --purple: #9b59b6;
-            --teal: #1abc9c;
-            --orange: #e67e22;
-            --pink: #e84393;
+            --primary: #4A6FA5;
+            --secondary: #6B8E23;
+            --dark: #2C3E50;
+            --light: #F8F9FA;
+            --danger: #D9534F;
+            --warning: #F0AD4E;
+            --purple: #8E44AD;
+            --teal: #17A2B8;
+            --orange: #E67E22;
+            --pink: #E84393;
+            --success: #28A745;
+            --gray: #6C757D;
+            --light-gray: #E9ECEF;
         }
         
         * {
@@ -32,7 +35,7 @@
         }
         
         body {
-            background-color: #f5f7fa;
+            background-color: #F5F7FA;
             color: var(--dark);
             line-height: 1.6;
         }
@@ -47,9 +50,9 @@
             background: linear-gradient(135deg, var(--primary), var(--dark));
             color: white;
             padding: 25px 0;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -66,12 +69,13 @@
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
+            font-weight: 600;
         }
         
         .logo {
             font-size: 1.8rem;
             font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            background: linear-gradient(45deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -104,10 +108,10 @@
         .nav-tabs {
             display: flex;
             background-color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
         .tab {
@@ -117,23 +121,26 @@
             text-align: center;
             transition: all 0.3s ease;
             font-weight: 500;
+            border-bottom: 3px solid transparent;
         }
         
         .tab.active {
-            background-color: var(--primary);
-            color: white;
+            background-color: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
         }
         
         .tab:hover:not(.active) {
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
+            color: var(--primary);
         }
         
         .tab-content {
             display: none;
             background-color: white;
             padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
             margin-bottom: 20px;
         }
         
@@ -149,20 +156,23 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--dark);
         }
         
         input, select, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            background-color: white;
         }
         
         input:focus, select:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
         }
         
         button {
@@ -170,15 +180,17 @@
             color: white;
             border: none;
             padding: 12px 20px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.3s;
+            transition: all 0.3s;
             font-weight: 500;
         }
         
         button:hover {
-            background-color: #2980b9;
+            background-color: #3A5A8C;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .btn-secondary {
@@ -186,7 +198,7 @@
         }
         
         .btn-secondary:hover {
-            background-color: #27ae60;
+            background-color: #5A7E1A;
         }
         
         .btn-danger {
@@ -194,7 +206,7 @@
         }
         
         .btn-danger:hover {
-            background-color: #c0392b;
+            background-color: #C9302C;
         }
         
         .btn-purple {
@@ -202,28 +214,32 @@
         }
         
         .btn-purple:hover {
-            background-color: #8e44ad;
+            background-color: #7D3C98;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #E9ECEF;
         }
         
         th {
-            background-color: #f8f9fa;
+            background-color: #F8F9FA;
             font-weight: 600;
+            color: var(--dark);
         }
         
         tr:hover {
-            background-color: #f5f5f5;
+            background-color: #F8F9FA;
         }
         
         .summary-cards {
@@ -235,10 +251,16 @@
         
         .card {
             background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--primary);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
         
         .card.detailing {
@@ -257,6 +279,7 @@
             margin-bottom: 15px;
             color: var(--dark);
             font-size: 1.2rem;
+            font-weight: 600;
         }
         
         .card-value {
@@ -266,7 +289,7 @@
         }
         
         .card-positive {
-            color: var(--secondary);
+            color: var(--success);
         }
         
         .card-negative {
@@ -279,10 +302,10 @@
         
         .chart-container {
             background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         
         .filters {
@@ -309,7 +332,7 @@
         }
         
         .highlight {
-            background-color: #fff9c4;
+            background-color: #FFF9C4;
         }
         
         .profit-details {
@@ -320,11 +343,11 @@
         }
         
         .settlement-card {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+            background: linear-gradient(135deg, var(--primary), var(--dark));
             color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
         
         .settlement-card h3 {
@@ -342,15 +365,18 @@
             font-size: 1.5rem;
             margin: 25px 0 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid #E9ECEF;
+            color: var(--dark);
+            font-weight: 600;
         }
         
         .reserve-card {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
+            background: linear-gradient(135deg, var(--warning), var(--orange));
             color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .reserve-actions {
@@ -364,9 +390,9 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            padding: 20px;
+            background-color: #F8F9FA;
+            border-radius: 12px;
         }
         
         .detail-table {
@@ -376,41 +402,42 @@
         .detail-table h4 {
             margin-bottom: 10px;
             color: var(--dark);
+            font-weight: 600;
         }
         
         .firebase-status {
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin: 10px 0;
             font-weight: 500;
         }
         
         .firebase-success {
-            background: #d4edda;
+            background: #D4EDDA;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border: 1px solid #C3E6CB;
         }
         
         .firebase-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F5C6CB;
         }
         
         .firebase-warning {
-            background: #fff3cd;
+            background: #FFF3CD;
             color: #856404;
-            border: 1px solid #ffeaa7;
+            border: 1px solid #FFEAA7;
         }
 
         /* Стили для расширенной аналитики */
         .profit-analysis {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
 
         .profit-metrics {
@@ -421,23 +448,28 @@
         }
 
         .metric-card {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
             backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
         }
 
         .metric-value {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             margin: 10px 0;
         }
 
         .analysis-tabs {
             display: flex;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
             overflow: hidden;
             margin-bottom: 20px;
         }
@@ -451,7 +483,7 @@
         }
 
         .analysis-tab.active {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
         }
 
         .analysis-content {
@@ -471,10 +503,15 @@
 
         .breakdown-card {
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            color: var(--dark); /* Добавлено: темный текст для читаемости */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            color: var(--dark);
+            transition: transform 0.3s;
+        }
+
+        .breakdown-card:hover {
+            transform: translateY(-5px);
         }
 
         .trend-indicator {
@@ -487,13 +524,13 @@
         }
 
         .trend-up {
-            background: #d4edda;
+            background: #D4EDDA;
             color: #155724;
         }
 
         .trend-down {
-            background: #f8d7da;
-            color: #721c24;
+            background: #F8D7DA;
+            color: #721C24;
         }
 
         .comparison-grid {
@@ -507,7 +544,7 @@
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #E9ECEF;
         }
 
         .cost-structure {
@@ -518,17 +555,22 @@
         }
 
         .cost-item {
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 6px;
+            background: #F8F9FA;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .cost-item:hover {
+            transform: translateY(-3px);
         }
 
         .expense-categories {
             margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 10px;
         }
 
         .expense-category-list {
@@ -539,30 +581,31 @@
         }
 
         .expense-category-item {
-            padding: 8px 12px;
+            padding: 12px 15px;
             background: white;
-            border-radius: 4px;
-            border-left: 4px solid #3498db;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .expense-classification-table {
             margin-top: 20px;
             background: white;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .expense-classification-table th {
-            background-color: #f8f9fa;
+            background-color: #F8F9FA;
         }
 
         .classification-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            background: #F8F9FA;
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--primary);
         }
 
         /* Стили для модального окна входа */
@@ -582,16 +625,16 @@
         .auth-modal-content {
             background-color: white;
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 12px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
         .auth-tabs {
             display: flex;
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #E9ECEF;
         }
 
         .auth-tab {
@@ -621,8 +664,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+            padding: 15px;
+            border-bottom: 1px solid #E9ECEF;
+            transition: background-color 0.3s;
+        }
+
+        .saved-expense-item:hover {
+            background-color: #F8F9FA;
         }
 
         .saved-expense-info {
@@ -635,10 +683,47 @@
         }
 
         .saved-expense-form {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
+            background: #F8F9FA;
+            padding: 25px;
+            border-radius: 10px;
             margin-bottom: 20px;
+        }
+
+        /* Стили для улучшенных счетов в отчетах */
+        .accounts-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .account-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .account-card h4 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 600;
+        }
+
+        .account-details {
+            margin-top: 15px;
+        }
+
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #E9ECEF;
         }
 
         @media (max-width: 768px) {
@@ -676,7 +761,8 @@
             .profit-metrics,
             .profit-breakdown,
             .comparison-grid,
-            .cost-structure {
+            .cost-structure,
+            .accounts-breakdown {
                 grid-template-columns: 1fr;
             }
 
@@ -1268,7 +1354,7 @@
             
             <div class="form-group">
                 <h3>О программе</h3>
-                <p>Версия 6.1 (Firebase Cloud Sync + Сохраненные расходы)</p>
+                <p>Версия 6.2 (Firebase Cloud Sync + Сохраненные расходы + Улучшенный дизайн)</p>
                 <p>2025 Разработано для SK-Detailing by Chingiz</p>
             </div>
         </div>
@@ -1324,7 +1410,7 @@
         
         <!-- Модальное окно для добавления/редактирования операции -->
         <div id="transaction-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
                 <h3 id="modal-title">Добавить операцию</h3>
                 
                 <div class="form-group">
@@ -1406,7 +1492,7 @@
         
         <!-- Модальное окно для управления резервом -->
         <div id="reserve-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px;">
                 <h3 id="reserve-modal-title">Управление резервным фондом</h3>
                 
                 <div class="form-group">
@@ -1433,7 +1519,7 @@
 
         <!-- Модальное окно для изменения категории расходов -->
         <div id="expense-category-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px;">
                 <h3>Изменение категории расходов</h3>
                 
                 <div class="form-group">
@@ -2745,7 +2831,7 @@
                     labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
                     datasets: [{
                         data: [detailing.operatingExpenses, self12.operatingExpenses, self35.operatingExpenses],
-                        backgroundColor: ['#3498db', '#2ecc71', '#f39c12']
+                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
                     }]
                 },
                 options: {
@@ -2774,15 +2860,15 @@
                         {
                             label: 'Валовая прибыль',
                             data: generateTrendData(displayMonths.length, detailing.grossProfit),
-                            borderColor: '#2ecc71',
-                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderColor: '#6B8E23',
+                            backgroundColor: 'rgba(107, 142, 35, 0.1)',
                             tension: 0.4
                         },
                         {
                             label: 'Чистая прибыль',
                             data: generateTrendData(displayMonths.length, detailing.netProfit),
-                            borderColor: '#3498db',
-                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderColor: '#4A6FA5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
                             tension: 0.4
                         }
                     ]
@@ -2815,7 +2901,7 @@
                                 detailing.netProfit,
                                 detailing.grossMargin
                             ],
-                            backgroundColor: '#3498db'
+                            backgroundColor: '#4A6FA5'
                         },
                         {
                             label: 'Посты 1-2',
@@ -2825,7 +2911,7 @@
                                 self12.netProfit,
                                 self12.grossMargin
                             ],
-                            backgroundColor: '#2ecc71'
+                            backgroundColor: '#6B8E23'
                         },
                         {
                             label: 'Посты 3-5',
@@ -2835,7 +2921,7 @@
                                 self35.netProfit,
                                 self35.grossMargin
                             ],
-                            backgroundColor: '#f39c12'
+                            backgroundColor: '#F0AD4E'
                         }
                     ]
                 },
@@ -2861,15 +2947,15 @@
                         {
                             label: 'Валовая маржа',
                             data: generateTrendData(displayMonths.length, detailing.grossMargin, true),
-                            borderColor: '#2ecc71',
-                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderColor: '#6B8E23',
+                            backgroundColor: 'rgba(107, 142, 35, 0.1)',
                             tension: 0.4
                         },
                         {
                             label: 'Чистая маржа',
                             data: generateTrendData(displayMonths.length, detailing.netMargin, true),
-                            borderColor: '#3498db',
-                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderColor: '#4A6FA5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
                             tension: 0.4
                         }
                     ]
@@ -3169,15 +3255,15 @@
                         {
                             label: 'Доходы',
                             data: [detailingIncome, self12Income, self35Income],
-                            backgroundColor: '#2ecc71',
-                            borderColor: '#27ae60',
+                            backgroundColor: '#6B8E23',
+                            borderColor: '#5A7E1A',
                             borderWidth: 1
                         },
                         {
                             label: 'Расходы',
                             data: [detailingExpense, self12Expense, self35Expense],
-                            backgroundColor: '#e74c3c',
-                            borderColor: '#c0392b',
+                            backgroundColor: '#D9534F',
+                            borderColor: '#C9302C',
                             borderWidth: 1
                         }
                     ]
@@ -3255,13 +3341,13 @@
                             paymentMethods.reserve
                         ],
                         backgroundColor: [
-                            '#3498db',
-                            '#2980b9',
-                            '#e74c3c',
-                            '#c0392b',
-                            '#9b59b6',
-                            '#8e44ad',
-                            '#f39c12'
+                            '#4A6FA5',
+                            '#3A5A8C',
+                            '#D9534F',
+                            '#C9302C',
+                            '#8E44AD',
+                            '#7D3C98',
+                            '#F0AD4E'
                         ]
                     }]
                 },
@@ -3347,215 +3433,343 @@
             let sultanExpense = 0;
             let chingizExpense = 0;
             
+            // Детализация по источникам для Султана и Чингиза
+            let sultanIncomeDetails = {
+                'sultan_akbars': 0,
+                'sultan_sber': 0,
+                'sultan_sber_cash': 0
+            };
+            
+            let chingizIncomeDetails = {
+                'chingiz_cash': 0,
+                'chingiz_card': 0,
+                'chingiz_cash_self': 0,
+                'reserve': 0
+            };
+            
+            let sultanExpenseDetails = {
+                'sultan_akbars': 0,
+                'sultan_sber': 0,
+                'sultan_sber_cash': 0
+            };
+            
+            let chingizExpenseDetails = {
+                'chingiz_cash': 0,
+                'chingiz_card': 0,
+                'chingiz_cash_self': 0,
+                'reserve': 0
+            };
+            
             incomeTransactions.forEach(t => {
                 if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
                     sultanIncome += t.amount;
+                    sultanIncomeDetails[t.payment] += t.amount;
                 } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
                     chingizIncome += t.amount;
+                    chingizIncomeDetails[t.payment] += t.amount;
                 }
             });
             
             expenseTransactions.forEach(t => {
                 if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
                     sultanExpense += t.amount;
+                    sultanExpenseDetails[t.payment] += t.amount;
                 } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
                     chingizExpense += t.amount;
+                    chingizExpenseDetails[t.payment] += t.amount;
                 }
             });
             
-            // Форматирование дат для отображения
-            const formatDateForReport = (date) => {
-                return date.toLocaleDateString('ru-RU');
-            };
-            
             // Формирование HTML отчета
-            const reportContent = document.getElementById('report-content');
-            reportContent.innerHTML = `
-                <div class="card">
-                    <h3>Отчет за период: ${formatDateForReport(startDate)} - ${formatDateForReport(endDate)}</h3>
-                    
-                    <div class="summary-cards">
-                        <div class="card detailing">
-                            <h3>Детейлинг</h3>
-                            <div class="card-value">${detailingNet.toFixed(2)} руб.</div>
-                            <p>Доходы: ${detailingIncome.toFixed(2)} руб.</p>
-                            <p>Расходы: ${detailingExpense.toFixed(2)} руб.</p>
-                            <p>Валовая прибыль: ${advancedAnalysis.detailing.grossProfit.toFixed(2)} руб.</p>
-                            <p>Чистая прибыль: ${advancedAnalysis.detailing.netProfit.toFixed(2)} руб.</p>
-                            <p>Рентабельность: ${advancedAnalysis.detailing.grossMargin.toFixed(1)}%</p>
-                            <p>Доля Чингиза: ${(detailingNet / 2).toFixed(2)} руб.</p>
-                            <p>Доля Султана: ${(detailingNet / 2).toFixed(2)} руб.</p>
+            let reportHTML = `
+                <h3>Отчет за период: ${formatDate(startDate)} - ${formatDate(endDate)}</h3>
+                
+                <div class="profit-analysis">
+                    <h4>Сводные показатели</h4>
+                    <div class="profit-metrics">
+                        <div class="metric-card">
+                            <div>Общая прибыль</div>
+                            <div class="metric-value">${totalProfit.toFixed(2)} руб.</div>
                         </div>
-                        
-                        <div class="card self12">
-                            <h3>Самообслуживание (посты 1-2)</h3>
-                            <div class="card-value">${self12Net.toFixed(2)} руб.</div>
-                            <p>Доходы: ${self12Income.toFixed(2)} руб.</p>
-                            <p>Расходы: ${self12Expense.toFixed(2)} руб.</p>
-                            <p>Валовая прибыль: ${advancedAnalysis.self12.grossProfit.toFixed(2)} руб.</p>
-                            <p>Чистая прибыль: ${advancedAnalysis.self12.netProfit.toFixed(2)} руб.</p>
-                            <p>Рентабельность: ${advancedAnalysis.self12.grossMargin.toFixed(1)}%</p>
-                            <p>Доля Чингиза: ${(self12Net / 2).toFixed(2)} руб.</p>
-                            <p>Доля Султана: ${(self12Net / 2).toFixed(2)} руб.</p>
+                        <div class="metric-card">
+                            <div>Прибыль Чингиза</div>
+                            <div class="metric-value">${chingizProfit.toFixed(2)} руб.</div>
                         </div>
-                        
-                        <div class="card self35">
-                            <h3>Самообслуживание (посты 3-5)</h3>
-                            <div class="card-value">${self35Net.toFixed(2)} руб.</div>
-                            <p>Доходы: ${self35Income.toFixed(2)} руб.</p>
-                            <p>Расходы: ${self35Expense.toFixed(2)} руб.</p>
-                            <p>Валовая прибыль: ${advancedAnalysis.self35.grossProfit.toFixed(2)} руб.</p>
-                            <p>Чистая прибыль: ${advancedAnalysis.self35.netProfit.toFixed(2)} руб.</p>
-                            <p>Рентабельность: ${advancedAnalysis.self35.grossMargin.toFixed(1)}%</p>
-                            <p>Принадлежит Султану</p>
+                        <div class="metric-card">
+                            <div>Прибыль Султана</div>
+                            <div class="metric-value">${sultanProfit.toFixed(2)} руб.</div>
                         </div>
-                    </div>
-                    
-                    <div class="summary-cards">
-                        <div class="card">
-                            <h3>Прибыль Чингиза</h3>
-                            <div class="card-value">${chingizProfit.toFixed(2)} руб.</div>
-                            <p>50% от Детейлинга и постов 1-2</p>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Прибыль Султана</h3>
-                            <div class="card-value">${sultanProfit.toFixed(2)} руб.</div>
-                            <p>50% от Детейлинга и постов 1-2 + 100% постов 3-5</p>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Общая прибыль</h3>
-                            <div class="card-value">${totalProfit.toFixed(2)} руб.</div>
-                            <p>После всех расходов</p>
-                        </div>
-                    </div>
-                    
-                    <div class="settlement-card">
-                        <h3>Взаимные расчеты</h3>
-                        <p>Сумма, которую необходимо перевести для уравнивания прибыли</p>
-                        <div class="settlement-amount">${Math.abs(mutualSettlement).toFixed(2)} руб.</div>
-                        <p>${mutualSettlement > 0 ? 'Султан должен перевести Чингизу' : mutualSettlement < 0 ? 'Чингиз должен перевести Султану' : 'Расчеты сбалансированы'}</p>
-                    </div>
-                    
-                    <h3 class="section-title">Доходы по счетам</h3>
-                    <div class="summary-cards">
-                        <div class="card">
-                            <h3>Счета Султана</h3>
-                            <div class="card-value">${sultanIncome.toFixed(2)} руб.</div>
-                            <p>Получено на счета Султана</p>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Счета Чингиза</h3>
-                            <div class="card-value">${chingizIncome.toFixed(2)} руб.</div>
-                            <p>Получено на счета Чингиза</p>
-                        </div>
-                    </div>
-                    
-                    <h3 class="section-title">Расходы по счетам</h3>
-                    <div class="summary-cards">
-                        <div class="card">
-                            <h3>Расходы Султана</h3>
-                            <div class="card-value">${sultanExpense.toFixed(2)} руб.</div>
-                            <p>Потрачено с счетов Султана</p>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Расходы Чингиза</h3>
-                            <div class="card-value">${chingizExpense.toFixed(2)} руб.</div>
-                            <p>Потрачено с счетов Чингиза</p>
-                        </div>
-                    </div>
-                    
-                    <h3 class="section-title">Детализация операций</h3>
-                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                        <div style="flex: 1; min-width: 300px;">
-                            <h4>Доходы</h4>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Категория</th>
-                                        <th>Сумма</th>
-                                        <th>Способ оплаты</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${incomeTransactions.map(t => `
-                                        <tr>
-                                            <td>${formatDate(t.date)}</td>
-                                            <td>${getCategoryLabel(t.category)}</td>
-                                            <td>${t.amount.toFixed(2)} руб.</td>
-                                            <td>${getPaymentLabel(t.payment)}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div style="flex: 1; min-width: 300px;">
-                            <h4>Расходы</h4>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Дата</th>
-                                        <th>Категория</th>
-                                        <th>Сумма</th>
-                                        <th>Способ оплаты</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${expenseTransactions.map(t => `
-                                        <tr>
-                                            <td>${formatDate(t.date)}</td>
-                                            <td>${getCategoryLabel(t.category)}</td>
-                                            <td>${t.amount.toFixed(2)} руб.</td>
-                                            <td>${getPaymentLabel(t.payment)}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
+                        <div class="metric-card">
+                            <div>Взаимные расчеты</div>
+                            <div class="metric-value">${Math.abs(mutualSettlement).toFixed(2)} руб.</div>
+                            <div>${mutualSettlement > 0 ? 'Султан → Чингиз' : mutualSettlement < 0 ? 'Чингиз → Султан' : 'Сбалансировано'}</div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="accounts-breakdown">
+                    <div class="account-card">
+                        <h4>Доходы по счетам Султана</h4>
+                        <div class="account-details">
+                            <div class="account-item">
+                                <span>Счет АББ Султана:</span>
+                                <span>${sultanIncomeDetails.sultan_akbars.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Сбер Султана:</span>
+                                <span>${sultanIncomeDetails.sultan_sber.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Сбер (Султан) - самообслуживание:</span>
+                                <span>${sultanIncomeDetails.sultan_sber_cash.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
+                                <span>Итого доходы Султана:</span>
+                                <span>${sultanIncome.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-card">
+                        <h4>Доходы по счетам Чингиза</h4>
+                        <div class="account-details">
+                            <div class="account-item">
+                                <span>Наличные (Чингиз):</span>
+                                <span>${chingizIncomeDetails.chingiz_cash.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Чингиза:</span>
+                                <span>${chingizIncomeDetails.chingiz_card.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Наличные (Чингиз) - самообслуживание:</span>
+                                <span>${chingizIncomeDetails.chingiz_cash_self.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Резервный фонд Чингиза:</span>
+                                <span>${chingizIncomeDetails.reserve.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
+                                <span>Итого доходы Чингиза:</span>
+                                <span>${chingizIncome.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-card">
+                        <h4>Расходы по счетам Султана</h4>
+                        <div class="account-details">
+                            <div class="account-item">
+                                <span>Счет АББ Султана:</span>
+                                <span>${sultanExpenseDetails.sultan_akbars.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Сбер Султана:</span>
+                                <span>${sultanExpenseDetails.sultan_sber.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Сбер (Султан) - самообслуживание:</span>
+                                <span>${sultanExpenseDetails.sultan_sber_cash.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
+                                <span>Итого расходы Султана:</span>
+                                <span>${sultanExpense.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="account-card">
+                        <h4>Расходы по счетам Чингиза</h4>
+                        <div class="account-details">
+                            <div class="account-item">
+                                <span>Наличные (Чингиз):</span>
+                                <span>${chingizExpenseDetails.chingiz_cash.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Счет Чингиза:</span>
+                                <span>${chingizExpenseDetails.chingiz_card.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Наличные (Чингиз) - самообслуживание:</span>
+                                <span>${chingizExpenseDetails.chingiz_cash_self.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Резервный фонд Чингиза:</span>
+                                <span>${chingizExpenseDetails.reserve.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
+                                <span>Итого расходы Чингиза:</span>
+                                <span>${chingizExpense.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>Детейлинг</h3>
+                        <div class="card-value">${detailingNet.toFixed(2)} руб.</div>
+                        <p>Доходы: ${detailingIncome.toFixed(2)} руб.</p>
+                        <p>Расходы: ${detailingExpense.toFixed(2)} руб.</p>
+                        <p>Чистая прибыль: ${detailingNet.toFixed(2)} руб.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Самообслуживание (посты 1-2)</h3>
+                        <div class="card-value">${self12Net.toFixed(2)} руб.</div>
+                        <p>Доходы: ${self12Income.toFixed(2)} руб.</p>
+                        <p>Расходы: ${self12Expense.toFixed(2)} руб.</p>
+                        <p>Чистая прибыль: ${self12Net.toFixed(2)} руб.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Самообслуживание (посты 3-5)</h3>
+                        <div class="card-value">${self35Net.toFixed(2)} руб.</div>
+                        <p>Доходы: ${self35Income.toFixed(2)} руб.</p>
+                        <p>Расходы: ${self35Expense.toFixed(2)} руб.</p>
+                        <p>Чистая прибыль: ${self35Net.toFixed(2)} руб.</p>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>Расширенная аналитика прибыльности</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Показатель</th>
+                                <th>Детейлинг</th>
+                                <th>Посты 1-2</th>
+                                <th>Посты 3-5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Валовая прибыль</td>
+                                <td>${advancedAnalysis.detailing.grossProfit.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.grossProfit.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.grossProfit.toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Валовая маржа</td>
+                                <td>${advancedAnalysis.detailing.grossMargin.toFixed(1)}%</td>
+                                <td>${advancedAnalysis.self12.grossMargin.toFixed(1)}%</td>
+                                <td>${advancedAnalysis.self35.grossMargin.toFixed(1)}%</td>
+                            </tr>
+                            <tr>
+                                <td>Чистая прибыль</td>
+                                <td>${advancedAnalysis.detailing.netProfit.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.netProfit.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.netProfit.toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Чистая маржа</td>
+                                <td>${advancedAnalysis.detailing.netMargin.toFixed(1)}%</td>
+                                <td>${advancedAnalysis.self12.netMargin.toFixed(1)}%</td>
+                                <td>${advancedAnalysis.self35.netMargin.toFixed(1)}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>Детализация по категориям расходов</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Категория расходов</th>
+                                <th>Детейлинг</th>
+                                <th>Посты 1-2</th>
+                                <th>Посты 3-5</th>
+                                <th>Итого</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Себестоимость (COGS)</td>
+                                <td>${advancedAnalysis.detailing.costOfGoodsSold.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.costOfGoodsSold.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.costOfGoodsSold.toFixed(2)} руб.</td>
+                                <td>${(advancedAnalysis.detailing.costOfGoodsSold + advancedAnalysis.self12.costOfGoodsSold + advancedAnalysis.self35.costOfGoodsSold).toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Прямые затраты</td>
+                                <td>${advancedAnalysis.detailing.directCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.directCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.directCosts.toFixed(2)} руб.</td>
+                                <td>${(advancedAnalysis.detailing.directCosts + advancedAnalysis.self12.directCosts + advancedAnalysis.self35.directCosts).toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Косвенные затраты</td>
+                                <td>${advancedAnalysis.detailing.indirectCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.indirectCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.indirectCosts.toFixed(2)} руб.</td>
+                                <td>${(advancedAnalysis.detailing.indirectCosts + advancedAnalysis.self12.indirectCosts + advancedAnalysis.self35.indirectCosts).toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Постоянные затраты</td>
+                                <td>${advancedAnalysis.detailing.fixedCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.fixedCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.fixedCosts.toFixed(2)} руб.</td>
+                                <td>${(advancedAnalysis.detailing.fixedCosts + advancedAnalysis.self12.fixedCosts + advancedAnalysis.self35.fixedCosts).toFixed(2)} руб.</td>
+                            </tr>
+                            <tr>
+                                <td>Переменные затраты</td>
+                                <td>${advancedAnalysis.detailing.variableCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self12.variableCosts.toFixed(2)} руб.</td>
+                                <td>${advancedAnalysis.self35.variableCosts.toFixed(2)} руб.</td>
+                                <td>${(advancedAnalysis.detailing.variableCosts + advancedAnalysis.self12.variableCosts + advancedAnalysis.self35.variableCosts).toFixed(2)} руб.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="chart-container">
+                    <h4>Операции за период</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Тип</th>
+                                <th>Категория</th>
+                                <th>Способ оплаты</th>
+                                <th>Сумма</th>
+                                <th>Описание</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
+            
+            reportTransactions.forEach(t => {
+                reportHTML += `
+                    <tr>
+                        <td>${formatDate(t.date)}</td>
+                        <td>${getTypeLabel(t.type)}</td>
+                        <td>${getCategoryLabel(t.category)}</td>
+                        <td>${getPaymentLabel(t.payment)}</td>
+                        <td>${t.amount.toFixed(2)} руб.</td>
+                        <td>${t.description || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            reportHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            document.getElementById('report-content').innerHTML = reportHTML;
         }
         
         // Сохранение отчета
         function saveReport() {
             const reportContent = document.getElementById('report-content').innerHTML;
-            const blob = new Blob([`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Отчет автомойки</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .card { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; }
-                        .summary-cards { display: flex; flex-wrap: wrap; gap: 15px; }
-                        .card-value { font-size: 24px; font-weight: bold; margin: 10px 0; }
-                        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        .settlement-card { background: #3498db; color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
-                        .settlement-amount { font-size: 32px; font-weight: bold; margin: 15px 0; }
-                    </style>
-                </head>
-                <body>
-                    ${reportContent}
-                </body>
-                </html>
-            `], { type: 'text/html' });
-            
+            const blob = new Blob([reportContent], {type: 'text/html'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `отчет_автомойки_${new Date().toISOString().split('T')[0]}.html`;
-            document.body.appendChild(a);
+            a.download = `Отчет_${new Date().toISOString().split('T')[0]}.html`;
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
         
@@ -3564,6 +3778,7 @@
             const reportPeriod = document.getElementById('report-period').value;
             const reportMonth = document.getElementById('report-month').value;
             
+            // Определяем период отчета
             let startDate, endDate;
             const now = new Date();
             
@@ -3571,13 +3786,13 @@
                 const [year, month] = reportMonth.split('-');
                 if (reportPeriod === 'first_half') {
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month - 1, 15, 23, 59, 59, 999);
+                    endDate = new Date(year, month - 1, 15);
                 } else if (reportPeriod === 'second_half') {
                     startDate = new Date(year, month - 1, 16);
-                    endDate = new Date(year, month, 0, 23, 59, 59, 999);
+                    endDate = new Date(year, month, 0);
                 } else {
                     startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month, 0, 23, 59, 59, 999);
+                    endDate = new Date(year, month, 0);
                 }
             } else {
                 const currentYear = now.getFullYear();
@@ -3585,13 +3800,13 @@
                 
                 if (reportPeriod === 'first_half') {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59, 999);
+                    endDate = new Date(currentYear, currentMonth, 15);
                 } else if (reportPeriod === 'second_half') {
                     startDate = new Date(currentYear, currentMonth, 16);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
                 } else {
                     startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
                 }
             }
             
@@ -3601,7 +3816,14 @@
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
             
-            // Расчет показателей для отчета
+            // Подготовка данных для Excel
+            const data = [];
+            
+            // Добавляем заголовок
+            data.push(['Отчет за период:', `${formatDate(startDate)} - ${formatDate(endDate)}`]);
+            data.push([]);
+            
+            // Сводные показатели
             const {
                 detailingIncome, detailingExpense, detailingNet,
                 self12Income, self12Expense, self12Net,
@@ -3610,115 +3832,151 @@
                 mutualSettlement
             } = calculateProfits(reportTransactions);
             
-            // Создание книги Excel
-            const wb = XLSX.utils.book_new();
+            data.push(['Сводные показатели']);
+            data.push(['Общая прибыль:', `${totalProfit.toFixed(2)} руб.`]);
+            data.push(['Прибыль Чингиза:', `${chingizProfit.toFixed(2)} руб.`]);
+            data.push(['Прибыль Султана:', `${sultanProfit.toFixed(2)} руб.`]);
+            data.push(['Взаимные расчеты:', `${Math.abs(mutualSettlement).toFixed(2)} руб.`]);
+            data.push(['Направление:', mutualSettlement > 0 ? 'Султан → Чингиз' : mutualSettlement < 0 ? 'Чингиз → Султан' : 'Сбалансировано']);
+            data.push([]);
             
-            // Лист с итоговыми показателями
-            const summaryData = [
-                ['Показатель', 'Сумма (руб.)'],
-                ['Детейлинг - Доходы', detailingIncome],
-                ['Детейлинг - Расходы', detailingExpense],
-                ['Детейлинг - Чистая прибыль', detailingNet],
-                ['Самообслуживание 1-2 - Доходы', self12Income],
-                ['Самообслуживание 1-2 - Расходы', self12Expense],
-                ['Самообслуживание 1-2 - Чистая прибыль', self12Net],
-                ['Самообслуживание 3-5 - Доходы', self35Income],
-                ['Самообслуживание 3-5 - Расходы', self35Expense],
-                ['Самообслуживание 3-5 - Чистая прибыль', self35Net],
-                ['Прибыль Чингиза', chingizProfit],
-                ['Прибыль Султана', sultanProfit],
-                ['Общая прибыль', totalProfit],
-                ['Взаимные расчеты', mutualSettlement]
-            ];
+            // Прибыль по направлениям
+            data.push(['Прибыль по направлениям']);
+            data.push(['Детейлинг:', `${detailingNet.toFixed(2)} руб.`]);
+            data.push(['Самообслуживание (посты 1-2):', `${self12Net.toFixed(2)} руб.`]);
+            data.push(['Самообслуживание (посты 3-5):', `${self35Net.toFixed(2)} руб.`]);
+            data.push([]);
             
-            const summaryWs = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, summaryWs, 'Итоги');
+            // Детализация по счетам
+            // Доходы по счетам Султана
+            let sultanIncomeDetails = {
+                'sultan_akbars': 0,
+                'sultan_sber': 0,
+                'sultan_sber_cash': 0
+            };
             
-            // Лист с доходами
-            const incomeData = [
-                ['Дата', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание']
-            ];
+            // Доходы по счетам Чингиза
+            let chingizIncomeDetails = {
+                'chingiz_cash': 0,
+                'chingiz_card': 0,
+                'chingiz_cash_self': 0,
+                'reserve': 0
+            };
             
-            reportTransactions
-                .filter(t => t.type === 'income')
-                .forEach(t => {
-                    incomeData.push([
-                        t.date,
-                        getCategoryLabel(t.category),
-                        getPaymentLabel(t.payment),
-                        t.amount,
-                        t.description || ''
-                    ]);
-                });
+            // Расходы по счетам Султана
+            let sultanExpenseDetails = {
+                'sultan_akbars': 0,
+                'sultan_sber': 0,
+                'sultan_sber_cash': 0
+            };
             
-            const incomeWs = XLSX.utils.aoa_to_sheet(incomeData);
-            XLSX.utils.book_append_sheet(wb, incomeWs, 'Доходы');
+            // Расходы по счетам Чингиза
+            let chingizExpenseDetails = {
+                'chingiz_cash': 0,
+                'chingiz_card': 0,
+                'chingiz_cash_self': 0,
+                'reserve': 0
+            };
             
-            // Лист с расходами
-            const expenseData = [
-                ['Дата', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание']
-            ];
-            
-            reportTransactions
-                .filter(t => t.type === 'expense')
-                .forEach(t => {
-                    expenseData.push([
-                        t.date,
-                        getCategoryLabel(t.category),
-                        getPaymentLabel(t.payment),
-                        t.amount,
-                        t.description || ''
-                    ]);
-                });
-            
-            const expenseWs = XLSX.utils.aoa_to_sheet(expenseData);
-            XLSX.utils.book_append_sheet(wb, expenseWs, 'Расходы');
-            
-            // Сохранение файла
-            XLSX.writeFile(wb, `отчет_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
-        }
-        
-        // Экспорт всех данных в Excel
-        function exportToExcel() {
-            const wb = XLSX.utils.book_new();
-            
-            // Лист с транзакциями
-            const transactionData = [
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма (руб.)', 'Описание', 'Категория расходов']
-            ];
-            
-            transactions.forEach(t => {
-                // Определяем категорию расходов для отображения
-                let expenseCategoryDisplay = '';
-                if (t.type === 'expense') {
-                    const manualCategory = t.manualExpenseCategory;
-                    if (manualCategory) {
-                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                    } else {
-                        const autoCategory = classifyExpense(t.description);
-                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
+            reportTransactions.forEach(t => {
+                if (t.type === 'income') {
+                    if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                        sultanIncomeDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                        chingizIncomeDetails[t.payment] += t.amount;
+                    }
+                } else {
+                    if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                        sultanExpenseDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                        chingizExpenseDetails[t.payment] += t.amount;
                     }
                 }
-                
-                transactionData.push([
+            });
+            
+            data.push(['Доходы по счетам Султана']);
+            data.push(['Счет АББ Султана:', `${sultanIncomeDetails.sultan_akbars.toFixed(2)} руб.`]);
+            data.push(['Счет Сбер Султана:', `${sultanIncomeDetails.sultan_sber.toFixed(2)} руб.`]);
+            data.push(['Счет Сбер (Султан) - самообслуживание:', `${sultanIncomeDetails.sultan_sber_cash.toFixed(2)} руб.`]);
+            data.push(['Итого доходы Султана:', `${Object.values(sultanIncomeDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
+            data.push([]);
+            
+            data.push(['Доходы по счетам Чингиза']);
+            data.push(['Наличные (Чингиз):', `${chingizIncomeDetails.chingiz_cash.toFixed(2)} руб.`]);
+            data.push(['Счет Чингиза:', `${chingizIncomeDetails.chingiz_card.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание:', `${chingizIncomeDetails.chingiz_cash_self.toFixed(2)} руб.`]);
+            data.push(['Резервный фонд Чингиза:', `${chingizIncomeDetails.reserve.toFixed(2)} руб.`]);
+            data.push(['Итого доходы Чингиза:', `${Object.values(chingizIncomeDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
+            data.push([]);
+            
+            data.push(['Расходы по счетам Султана']);
+            data.push(['Счет АББ Султана:', `${sultanExpenseDetails.sultan_akbars.toFixed(2)} руб.`]);
+            data.push(['Счет Сбер Султана:', `${sultanExpenseDetails.sultan_sber.toFixed(2)} руб.`]);
+            data.push(['Счет Сбер (Султан) - самообслуживание:', `${sultanExpenseDetails.sultan_sber_cash.toFixed(2)} руб.`]);
+            data.push(['Итого расходы Султана:', `${Object.values(sultanExpenseDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
+            data.push([]);
+            
+            data.push(['Расходы по счетам Чингиза']);
+            data.push(['Наличные (Чингиз):', `${chingizExpenseDetails.chingiz_cash.toFixed(2)} руб.`]);
+            data.push(['Счет Чингиза:', `${chingizExpenseDetails.chingiz_card.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание:', `${chingizExpenseDetails.chingiz_cash_self.toFixed(2)} руб.`]);
+            data.push(['Резервный фонд Чингиза:', `${chingizExpenseDetails.reserve.toFixed(2)} руб.`]);
+            data.push(['Итого расходы Чингиза:', `${Object.values(chingizExpenseDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
+            data.push([]);
+            
+            // Операции
+            data.push(['Операции за период']);
+            data.push(['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание']);
+            
+            reportTransactions.forEach(t => {
+                data.push([
+                    formatDate(t.date),
+                    getTypeLabel(t.type),
+                    getCategoryLabel(t.category),
+                    getPaymentLabel(t.payment),
+                    t.amount.toFixed(2),
+                    t.description || ''
+                ]);
+            });
+            
+            // Создание книги Excel
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Отчет');
+            
+            // Экспорт в файл
+            XLSX.writeFile(wb, `Отчет_${formatDate(startDate)}_${formatDate(endDate)}.xlsx`);
+        }
+        
+        // Экспорт данных в Excel
+        function exportToExcel() {
+            const data = [];
+            
+            // Заголовок
+            data.push(['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание']);
+            
+            // Данные
+            transactions.forEach(t => {
+                data.push([
                     t.date,
                     getTypeLabel(t.type),
                     getCategoryLabel(t.category),
                     getPaymentLabel(t.payment),
-                    t.amount,
-                    t.description || '',
-                    expenseCategoryDisplay
+                    t.amount.toFixed(2),
+                    t.description || ''
                 ]);
             });
             
-            const ws = XLSX.utils.aoa_to_sheet(transactionData);
-            XLSX.utils.book_append_sheet(wb, ws, 'Транзакции');
+            // Создание книги Excel
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Операции');
             
-            // Сохранение файла
-            XLSX.writeFile(wb, `данные_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
+            // Экспорт в файл
+            XLSX.writeFile(wb, 'Операции_автомойка.xlsx');
         }
         
-        // Экспорт данных
+        // Экспорт данных в JSON (резервная копия)
         function exportData(isBackup = false) {
             const data = {
                 transactions: transactions,
@@ -3727,21 +3985,17 @@
                 exportDate: new Date().toISOString()
             };
             
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = isBackup ? 
-                `резервная_копия_автомойки_${new Date().toISOString().split('T')[0]}.json` : 
-                `данные_автомойки_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
+            a.download = isBackup ? `backup_${new Date().toISOString().split('T')[0]}.json` : 'carwash_data.json';
             a.click();
-            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
         
-        // Импорт данных
-        function importData(event, isRestore = false) {
+        // Импорт данных из JSON
+        function importData(event, isBackup = false) {
             const file = event.target.files[0];
             if (!file) return;
             
@@ -3750,50 +4004,38 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     
-                    if (isRestore) {
-                        // Полное восстановление из резервной копии
-                        if (data.transactions) transactions = data.transactions;
-                        if (data.reserveBalance !== undefined) reserveBalance = data.reserveBalance;
-                        if (data.savedExpenses) savedExpenses = data.savedExpenses;
-                    } else {
-                        // Импорт транзакций
-                        if (data.transactions) {
-                            // Добавляем новые транзакции, избегая дубликатов
-                            const existingIds = transactions.map(t => t.id);
-                            const newTransactions = data.transactions.filter(t => !existingIds.includes(t.id));
-                            transactions = [...transactions, ...newTransactions];
-                        }
-                    }
-                    
-                    // Сохраняем в localStorage
-                    localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
-                    localStorage.setItem('carwash_reserve', reserveBalance.toString());
-                    localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
-                    
-                    // Сохраняем в Firebase, если пользователь авторизован
-                    if (currentUser) {
-                        saveToFirebase();
-                    }
-                    
-                    // Обновляем интерфейс
-                    renderTransactions();
-                    renderExpenseClassification();
-                    updateDashboard();
-                    updateReserveDisplay();
-                    renderSavedExpenses();
-                    
-                    alert(isRestore ? 
-                        'Данные успешно восстановлены из резервной копии!' : 
-                        'Данные успешно импортированы!');
+                    if (data.transactions && Array.isArray(data.transactions)) {
+                        transactions = data.transactions;
+                        reserveBalance = data.reserveBalance || 0;
+                        savedExpenses = data.savedExpenses || [];
                         
+                        localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
+                        localStorage.setItem('carwash_reserve', reserveBalance.toString());
+                        localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
+                        
+                        // Сохраняем в Firebase, если пользователь авторизован
+                        if (currentUser) {
+                            saveToFirebase();
+                        }
+                        
+                        renderTransactions();
+                        renderExpenseClassification();
+                        renderSavedExpenses();
+                        updateDashboard();
+                        updateReserveDisplay();
+                        
+                        alert(`Данные успешно ${isBackup ? 'восстановлены' : 'импортированы'}!`);
+                    } else {
+                        alert('Неверный формат файла');
+                    }
                 } catch (error) {
-                    alert('Ошибка при импорте данных: ' + error.message);
+                    alert('Ошибка при чтении файла: ' + error.message);
                 }
-                
-                // Очищаем поле ввода файла
-                event.target.value = '';
             };
             reader.readAsText(file);
+            
+            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова
+            event.target.value = '';
         }
         
         // Вспомогательные функции
@@ -3813,8 +4055,8 @@
         function getCategoryLabel(category) {
             const categories = {
                 'detailing': 'Детейлинг',
-                'self12': 'Самообслуживание (посты 1-2)',
-                'self35': 'Самообслуживание (посты 3-5)',
+                'self12': 'Самообслуживание (1-2)',
+                'self35': 'Самообслуживание (3-5)',
                 'reserve': 'Резервный фонд'
             };
             return categories[category] || category;
