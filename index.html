@@ -540,13 +540,6 @@
             margin-top: 15px;
         }
 
-        .comparison-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #E9ECEF;
-        }
-
         .cost-structure {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -726,6 +719,118 @@
             border-bottom: 1px solid #E9ECEF;
         }
 
+        /* Новые стили для улучшенного дизайна дашборда */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .mini-chart-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            height: 300px;
+        }
+        
+        .mini-chart-container h4 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .stat-card.detailing {
+            border-top-color: var(--purple);
+        }
+        
+        .stat-card.self12 {
+            border-top-color: var(--teal);
+        }
+        
+        .stat-card.self35 {
+            border-top-color: var(--warning);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .compact-chart {
+            height: 250px;
+        }
+
+        /* Новые стили для рентабельности */
+        .profitability-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .profitability-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .profitability-card.detailing {
+            border-top-color: var(--purple);
+        }
+        
+        .profitability-card.self12 {
+            border-top-color: var(--teal);
+        }
+        
+        .profitability-card.self35 {
+            border-top-color: var(--warning);
+        }
+        
+        .profitability-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .profitability-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -775,6 +880,22 @@
                 margin-top: 10px;
                 width: 100%;
                 justify-content: flex-end;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .profitability-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -832,14 +953,130 @@
                     <label for="end-date">По</label>
                     <input type="date" id="end-date">
                 </div>
-
-                <div class="filter-group">
-                    <label for="analysis-type">Тип анализа</label>
-                    <select id="analysis-type">
-                        <option value="detailed">Детальный анализ</option>
-                        <option value="comparison">Сравнительный анализ</option>
-                        <option value="trends">Анализ трендов</option>
-                    </select>
+            </div>
+            
+            <!-- Статистика по направлениям -->
+            <div class="stats-grid">
+                <div class="stat-card detailing">
+                    <h3>Детейлинг</h3>
+                    <div class="stat-value" id="detailing-profit-stat">0 руб.</div>
+                    <div class="stat-label">Чистая прибыль</div>
+                    <div class="stat-label" id="detailing-margin-stat">Маржа: 0%</div>
+                </div>
+                
+                <div class="stat-card self12">
+                    <h3>Посты 1-2</h3>
+                    <div class="stat-value" id="self12-profit-stat">0 руб.</div>
+                    <div class="stat-label">Чистая прибыль</div>
+                    <div class="stat-label" id="self12-margin-stat">Маржа: 0%</div>
+                </div>
+                
+                <div class="stat-card self35">
+                    <h3>Посты 3-5</h3>
+                    <div class="stat-value" id="self35-profit-stat">0 руб.</div>
+                    <div class="stat-label">Чистая прибыль</div>
+                    <div class="stat-label" id="self35-margin-stat">Маржа: 0%</div>
+                </div>
+            </div>
+            
+            <!-- Показатели рентабельности -->
+            <div class="profitability-grid">
+                <div class="profitability-card detailing">
+                    <h3>Рентабельность детейлинга</h3>
+                    <div class="profitability-value" id="detailing-profitability">0%</div>
+                    <div class="profitability-label">Валовая рентабельность</div>
+                </div>
+                
+                <div class="profitability-card self12">
+                    <h3>Рентабельность постов 1-2</h3>
+                    <div class="profitability-value" id="self12-profitability">0%</div>
+                    <div class="profitability-label">Валовая рентабельность</div>
+                </div>
+                
+                <div class="profitability-card self35">
+                    <h3>Рентабельность постов 3-5</h3>
+                    <div class="profitability-value" id="self35-profitability">0%</div>
+                    <div class="profitability-label">Валовая рентабельность</div>
+                </div>
+            </div>
+            
+            <!-- Основная сетка дашборда -->
+            <div class="dashboard-grid">
+                <div>
+                    <!-- Графики доходов и расходов -->
+                    <div class="chart-row">
+                        <div class="mini-chart-container">
+                            <h4>Доходы по категориям</h4>
+                            <canvas id="incomeChart" height="200"></canvas>
+                        </div>
+                        <div class="mini-chart-container">
+                            <h4>Расходы по категориям</h4>
+                            <canvas id="expenseChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Графики прибыльности -->
+                    <div class="chart-row">
+                        <div class="mini-chart-container">
+                            <h4>Прибыль по направлениям</h4>
+                            <canvas id="profitChart" height="200"></canvas>
+                        </div>
+                        <div class="mini-chart-container">
+                            <h4>Способы оплаты</h4>
+                            <canvas id="paymentChart" height="200"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Новые графики -->
+                    <div class="chart-row">
+                        <div class="mini-chart-container">
+                            <h4>Динамика доходов по месяцам</h4>
+                            <canvas id="incomeTrendChart" height="200"></canvas>
+                        </div>
+                        <div class="mini-chart-container">
+                            <h4>Динамика рентабельности</h4>
+                            <canvas id="profitabilityTrendChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <!-- Боковая панель с расчетами -->
+                    <div class="settlement-card">
+                        <h3>Взаимные расчеты</h3>
+                        <p>Сумма для уравнивания прибыли</p>
+                        <div class="settlement-amount" id="settlement-amount">0 руб.</div>
+                        <p id="settlement-text">Расчеты сбалансированы</p>
+                    </div>
+                    
+                    <div class="reserve-card">
+                        <h3>Резервный фонд</h3>
+                        <p>Средства для общих расходов</p>
+                        <div class="settlement-amount" id="reserve-amount">0 руб.</div>
+                        <div class="reserve-actions">
+                            <button id="add-reserve-btn">Пополнить</button>
+                            <button id="withdraw-reserve-btn">Списать</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Прибыль партнеров -->
+                    <div class="card">
+                        <h3>Прибыль партнеров</h3>
+                        <div class="comparison-grid">
+                            <div class="comparison-item">
+                                <span>Чингиз:</span>
+                                <span id="chingiz-profit-stat">0 руб.</span>
+                            </div>
+                            <div class="comparison-item">
+                                <span>Султан:</span>
+                                <span id="sultan-profit-stat">0 руб.</span>
+                            </div>
+                            <div class="comparison-item" style="border-top: 1px solid #E9ECEF; padding-top: 10px;">
+                                <span><strong>Итого:</strong></span>
+                                <span><strong id="total-profit-stat">0 руб.</strong></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -851,257 +1088,16 @@
                     <div class="metric-card">
                         <div>Общая рентабельность</div>
                         <div class="metric-value" id="overall-margin">0%</div>
-                        <div id="margin-trend" class="trend-indicator">→</div>
                     </div>
                     <div class="metric-card">
                         <div>Валовая маржа</div>
                         <div class="metric-value" id="gross-margin">0%</div>
-                        <div id="gross-trend" class="trend-indicator">→</div>
                     </div>
                     <div class="metric-card">
                         <div>Чистая маржа</div>
                         <div class="metric-value" id="net-margin">0%</div>
-                        <div id="net-trend" class="trend-indicator">→</div>
-                    </div>
-                    <div class="metric-card">
-                        <div>Оборачиваемость</div>
-                        <div class="metric-value" id="turnover-ratio">0.0</div>
-                        <div id="turnover-trend" class="trend-indicator">→</div>
                     </div>
                 </div>
-
-                <div class="analysis-tabs">
-                    <div class="analysis-tab active" data-analysis="profitability">Рентабельность</div>
-                    <div class="analysis-tab" data-analysis="costs">Структура затрат</div>
-                    <div class="analysis-tab" data-analysis="trends">Динамика</div>
-                    <div class="analysis-tab" data-analysis="comparison">Сравнение</div>
-                </div>
-
-                <div id="profitability-analysis" class="analysis-content active">
-                    <div class="profit-breakdown">
-                        <div class="breakdown-card">
-                            <h4>Детейлинг</h4>
-                            <div class="metric-value" id="detailing-gross-profit">0 руб.</div>
-                            <div>Валовая прибыль</div>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Маржа:</span>
-                                    <span id="detailing-margin">0%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span id="detailing-cogs">0 руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span id="detailing-expenses">0 руб.</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="breakdown-card">
-                            <h4>Посты 1-2</h4>
-                            <div class="metric-value" id="self12-gross-profit">0 руб.</div>
-                            <div>Валовая прибыль</div>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Маржа:</span>
-                                    <span id="self12-margin">0%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span id="self12-cogs">0 руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span id="self12-expenses">0 руб.</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="breakdown-card">
-                            <h4>Посты 3-5</h4>
-                            <div class="metric-value" id="self35-gross-profit">0 руб.</div>
-                            <div>Валовая прибыль</div>
-                            <div class="comparison-grid">
-                                <div class="comparison-item">
-                                    <span>Маржа:</span>
-                                    <span id="self35-margin">0%</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Себестоимость:</span>
-                                    <span id="self35-cogs">0 руб.</span>
-                                </div>
-                                <div class="comparison-item">
-                                    <span>Операционные расходы:</span>
-                                    <span id="self35-expenses">0 руб.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="costs-analysis" class="analysis-content">
-                    <div class="chart-container">
-                        <h4>Структура затрат по направлениям</h4>
-                        <canvas id="costStructureChart" height="300"></canvas>
-                    </div>
-                    <div class="cost-structure">
-                        <div class="cost-item">
-                            <div>Прямые затраты</div>
-                            <div class="metric-value" id="direct-costs">0 руб.</div>
-                            <div id="direct-costs-percent">0%</div>
-                        </div>
-                        <div class="cost-item">
-                            <div>Косвенные затраты</div>
-                            <div class="metric-value" id="indirect-costs">0 руб.</div>
-                            <div id="indirect-costs-percent">0%</div>
-                        </div>
-                        <div class="cost-item">
-                            <div>Постоянные затраты</div>
-                            <div class="metric-value" id="fixed-costs">0 руб.</div>
-                            <div id="fixed-costs-percent">0%</div>
-                        </div>
-                        <div class="cost-item">
-                            <div>Переменные затраты</div>
-                            <div class="metric-value" id="variable-costs">0 руб.</div>
-                            <div id="variable-costs-percent">0%</div>
-                        </div>
-                    </div>
-                    
-                    <div class="expense-categories">
-                        <h4>Категории расходов для аналитики</h4>
-                        <div class="expense-category-list">
-                            <div class="expense-category-item">
-                                <strong>Себестоимость (COGS):</strong> Химия, материалы, оборудование, запчасти
-                            </div>
-                            <div class="expense-category-item">
-                                <strong>Прямые затраты:</strong> Зарплаты основного персонала, премии
-                            </div>
-                            <div class="expense-category-item">
-                                <strong>Косвенные затраты:</strong> Реклама, маркетинг, банковские услуги
-                            </div>
-                            <div class="expense-category-item">
-                                <strong>Постоянные затраты:</strong> Аренда, коммунальные услуги, лизинг
-                            </div>
-                            <div class="expense-category-item">
-                                <strong>Переменные затраты:</strong> Прочие расходы, транспорт, командировки
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="trends-analysis" class="analysis-content">
-                    <div class="chart-container">
-                        <h4>Динамика прибыли по месяцам</h4>
-                        <canvas id="profitTrendChart" height="300"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h4>Тренды рентабельности</h4>
-                        <canvas id="marginTrendChart" height="300"></canvas>
-                    </div>
-                </div>
-
-                <div id="comparison-analysis" class="analysis-content">
-                    <div class="chart-container">
-                        <h4>Сравнение направлений</h4>
-                        <canvas id="comparisonChart" height="300"></canvas>
-                    </div>
-                    <div class="breakdown-card">
-                        <h4>Эффективность направлений</h4>
-                        <div class="comparison-grid">
-                            <div class="comparison-item">
-                                <span>Детейлинг (на рубль затрат):</span>
-                                <span id="detailing-efficiency">0.00 руб.</span>
-                            </div>
-                            <div class="comparison-item">
-                                <span>Посты 1-2 (на рубль затрат):</span>
-                                <span id="self12-efficiency">0.00 руб.</span>
-                            </div>
-                            <div class="comparison-item">
-                                <span>Посты 3-5 (на рубль затрат):</span>
-                                <span id="self35-efficiency">0.00 руб.</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="reserve-card">
-                <h3>Резервный фонд Чингиза</h3>
-                <p>Средства для общих расходов</p>
-                <div class="settlement-amount" id="reserve-amount">0 руб.</div>
-                <div class="reserve-actions">
-                    <button id="add-reserve-btn">Пополнить резерв</button>
-                    <button id="withdraw-reserve-btn">Списать с резерва</button>
-                </div>
-            </div>
-            
-            <div class="settlement-card">
-                <h3>Взаимные расчеты</h3>
-                <p>Сумма, которую необходимо перевести для уравнивания прибыли</p>
-                <div class="settlement-amount" id="settlement-amount">0 руб.</div>
-                <p id="settlement-text">Расчеты сбалансированы</p>
-            </div>
-            
-            <h3 class="section-title">Прибыль по направлениям</h3>
-            <div class="summary-cards">
-                <div class="card detailing">
-                    <h3>Детейлинг</h3>
-                    <div class="card-value" id="detailing-profit">0 руб.</div>
-                    <p>Валовая прибыль: <span id="detailing-gross-summary">0 руб.</span></p>
-                    <p>Чистая прибыль: <span id="detailing-net-summary">0 руб.</span></p>
-                    <p>Доля Чингиза: <span id="detailing-chingiz">0 руб.</span></p>
-                    <p>Доля Султана: <span id="detailing-sultan">0 руб.</span></p>
-                </div>
-                
-                <div class="card self12">
-                    <h3>Самообслуживание (посты 1-2)</h3>
-                    <div class="card-value" id="self12-profit">0 руб.</div>
-                    <p>Валовая прибыль: <span id="self12-gross-summary">0 руб.</span></p>
-                    <p>Чистая прибыль: <span id="self12-net-summary">0 руб.</span></p>
-                    <p>Доля Чингиза: <span id="self12-chingiz">0 руб.</span></p>
-                    <p>Доля Султана: <span id="self12-sultan">0 руб.</span></p>
-                </div>
-                
-                <div class="card self35">
-                    <h3>Самообслуживание (посты 3-5)</h3>
-                    <div class="card-value" id="self35-profit">0 руб.</div>
-                    <p>Валовая прибыль: <span id="self35-gross-summary">0 руб.</span></p>
-                    <p>Чистая прибыль: <span id="self35-net-summary">0 руб.</span></p>
-                    <p>Принадлежит Султану</p>
-                </div>
-            </div>
-            
-            <h3 class="section-title">Итоговая прибыль</h3>
-            <div class="summary-cards">
-                <div class="card">
-                    <h3>Прибыль Чингиза</h3>
-                    <div class="card-value card-positive" id="chingiz-profit">0 руб.</div>
-                    <p>50% от Детейлинга и постов 1-2</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Прибыль Султана</h3>
-                    <div class="card-value card-positive" id="sultan-profit">0 руб.</div>
-                    <p>50% от Детейлинга и постов 1-2 + 100% постов 3-5</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Общая прибыль</h3>
-                    <div class="card-value card-neutral" id="total-profit">0 руб.</div>
-                    <p>После всех расходов</p>
-                </div>
-            </div>
-            
-            <div class="chart-container">
-                <h3>Доходы и расходы по категориям</h3>
-                <canvas id="incomeExpenseChart" height="300"></canvas>
-            </div>
-            
-            <div class="chart-container">
-                <h3>Доходы по способам оплаты</h3>
-                <canvas id="paymentChart" height="300"></canvas>
             </div>
         </div>
         
@@ -1182,31 +1178,6 @@
                     <!-- Данные будут загружены через JavaScript -->
                 </tbody>
             </table>
-
-            <!-- Новая секция: Управление классификацией расходов -->
-            <div class="classification-info">
-                <h3>Классификация расходов</h3>
-                <p>Система автоматически определяет категории расходов на основе описания. Вы можете вручную изменить категорию для любой операции.</p>
-            </div>
-
-            <div class="expense-classification-table">
-                <h4>Расходы с автоматической классификацией</h4>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Дата</th>
-                            <th>Описание</th>
-                            <th>Сумма</th>
-                            <th>Автоматическая категория</th>
-                            <th>Ручная категория</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody id="expense-classification-body">
-                        <!-- Данные будут загружены через JavaScript -->
-                    </tbody>
-                </table>
-            </div>
         </div>
         
         <!-- Отчеты -->
@@ -1220,13 +1191,34 @@
                         <option value="first_half">1-15 число месяца</option>
                         <option value="second_half">16-последний день месяца</option>
                         <option value="current_month">Текущий месяц</option>
+                        <option value="year">Годовой отчет</option>
                         <option value="custom">Произвольный период</option>
                     </select>
                 </div>
                 
-                <div class="filter-group">
+                <div class="filter-group" id="report-year-group">
+                    <label for="report-year">Год</label>
+                    <select id="report-year">
+                        <!-- Годы будут заполнены через JavaScript -->
+                    </select>
+                </div>
+                
+                <div class="filter-group" id="report-month-group" style="display: none;">
                     <label for="report-month">Месяц</label>
-                    <input type="month" id="report-month">
+                    <select id="report-month">
+                        <option value="01">Январь</option>
+                        <option value="02">Февраль</option>
+                        <option value="03">Март</option>
+                        <option value="04">Апрель</option>
+                        <option value="05">Май</option>
+                        <option value="06">Июнь</option>
+                        <option value="07">Июль</option>
+                        <option value="08">Август</option>
+                        <option value="09">Сентябрь</option>
+                        <option value="10">Октябрь</option>
+                        <option value="11">Ноябрь</option>
+                        <option value="12">Декабрь</option>
+                    </select>
                 </div>
             </div>
             
@@ -1241,7 +1233,7 @@
             </div>
         </div>
         
-        <!-- Новая вкладка: Сохраненные расходы -->
+        <!-- Сохраненные расходы -->
         <div id="saved-expenses" class="tab-content">
             <h2>Сохраненные расходы</h2>
             <p>Создавайте и управляйте шаблонами часто используемых расходов для быстрого добавления операций.</p>
@@ -1333,16 +1325,6 @@
             </div>
             
             <div class="form-group">
-                <h3>Условия партнерства</h3>
-                <ul>
-                    <li>Чистая прибыль после всех расходов с Детейлинга и постов 1-2 самообслуживания делится пополам</li>
-                    <li>Чистая прибыль от постов 3-5 самообслуживания принадлежит только Султану</li>
-                    <li>Наличные с постов 3-5 принадлежат Султану, но собираются Чингизом</li>
-                    <li>Расходы могут производиться со счетов обоих партнеров и учитываются при расчете взаимных обязательств</li>
-                </ul>
-            </div>
-            
-            <div class="form-group">
                 <h3>Экспорт/Импорт данных</h3>
                 <p>Сохраняйте резервные копии данных регулярно</p>
                 <div class="actions">
@@ -1354,12 +1336,12 @@
             
             <div class="form-group">
                 <h3>О программе</h3>
-                <p>Версия 6.2 (Firebase Cloud Sync + Сохраненные расходы + Улучшенный дизайн)</p>
+                <p>Версия 6.4 (Годовой отчет + Детализация по постам + Показатели рентабельности + Графики)</p>
                 <p>2025 Разработано для SK-Detailing by Chingiz</p>
             </div>
         </div>
         
-        <!-- Модальное окно для аутентификации -->
+        <!-- Модальные окна -->
         <div id="auth-modal" class="auth-modal">
             <div class="auth-modal-content">
                 <h3>Вход в систему</h3>
@@ -1461,7 +1443,6 @@
                     <textarea id="transaction-description" rows="3"></textarea>
                 </div>
 
-                <!-- Поле для ручного изменения категории расходов -->
                 <div class="form-group" id="expense-category-group" style="display: none;">
                     <label for="transaction-expense-category">Категория расходов (для аналитики)</label>
                     <select id="transaction-expense-category">
@@ -1475,7 +1456,6 @@
                     <small id="expense-category-auto"></small>
                 </div>
 
-                <!-- Поле для выбора сохраненного расхода -->
                 <div class="form-group" id="saved-expense-group" style="display: none;">
                     <label for="saved-expense-select">Использовать сохраненный расход</label>
                     <select id="saved-expense-select">
@@ -1516,49 +1496,10 @@
                 </div>
             </div>
         </div>
-
-        <!-- Модальное окно для изменения категории расходов -->
-        <div id="expense-category-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px;">
-                <h3>Изменение категории расходов</h3>
-                
-                <div class="form-group">
-                    <label for="expense-category-transaction-id">ID операции</label>
-                    <input type="text" id="expense-category-transaction-id" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="expense-category-description">Описание</label>
-                    <input type="text" id="expense-category-description" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="expense-category-auto-category">Автоматически определенная категория</label>
-                    <input type="text" id="expense-category-auto-category" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label for="expense-category-manual">Ручная категория</label>
-                    <select id="expense-category-manual">
-                        <option value="">Автоматическое определение</option>
-                        <option value="cogs">Себестоимость (COGS)</option>
-                        <option value="direct">Прямые затраты</option>
-                        <option value="indirect">Косвенные затраты</option>
-                        <option value="fixed">Постоянные затраты</option>
-                        <option value="variable">Переменные затраты</option>
-                    </select>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                    <button id="cancel-expense-category-btn">Отмена</button>
-                    <button id="save-expense-category-btn" class="btn-secondary">Сохранить</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
-        // Конфигурация Firebase - ЗАМЕНИТЕ НА ВАШУ КОНФИГУРАЦИЮ
+        // Конфигурация Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC_klfpOSe-AzacQqzxzdZmy_cU0qNP6ow",
             authDomain: "reportsk-7ea5a.firebaseapp.com",
@@ -1579,44 +1520,39 @@
         let savedExpenses = JSON.parse(localStorage.getItem('carwash_saved_expenses')) || [];
         let editingId = null;
         let reserveAction = null;
-        let incomeExpenseChart = null;
+        let incomeChart = null;
+        let expenseChart = null;
+        let profitChart = null;
         let paymentChart = null;
-        let costStructureChart = null;
-        let profitTrendChart = null;
-        let marginTrendChart = null;
-        let comparisonChart = null;
+        let incomeTrendChart = null;
+        let profitabilityTrendChart = null;
         let currentUser = null;
 
         // Улучшенная система классификации расходов
         const expenseCategories = {
-            // Себестоимость (Cost of Goods Sold)
             cogs: {
                 name: "Себестоимость",
                 keywords: ["химия", "материал", "смарикомплекс", "оборудование", "запчасти", "инструмент", 
                           "расходники", "перчатки", "полотенца", "шампунь", "воск", "полироль", "щетки",
                           "пены", "автохимия", "моющее", "чистящее", "абразив", " паста", "герметик"]
             },
-            // Прямые затраты
             direct: {
                 name: "Прямые затраты",
                 keywords: ["зарплата", "зп", "оператор", "мойщик", "администратор", "менеджер", 
                           "сотрудник", "премия", "отпускные", "больничный", "надбавка", "инструктаж"]
             },
-            // Косвенные затраты
             indirect: {
                 name: "Косвенные затраты",
                 keywords: ["реклама", "маркетинг", "интернет", "связь", "банковское обслуживание", 
                           "канцелярия", "офис", "юрист", "бухгалтер", "консультация", "лицензия", 
                           "программное обеспечение", "сайт", "соцсети"]
             },
-            // Постоянные затраты
             fixed: {
                 name: "Постоянные затраты",
                 keywords: ["аренда", "коммунал", "электричество", "вода", "отопление", "арендная плата", 
                           "лизинг", "амортизация", "страхование", "налоги", "аренда оборудования", 
                           "техобслуживание", "ремонт помещения"]
             },
-            // Переменные затраты
             variable: {
                 name: "Переменные затраты",
                 keywords: ["транспорт", "командировка", "обучение", "сертификация", "мероприятие", 
@@ -1630,14 +1566,13 @@
             
             const desc = description.toLowerCase();
             
-            // Проверяем категории в порядке приоритета
             for (const [category, data] of Object.entries(expenseCategories)) {
                 if (data.keywords.some(keyword => desc.includes(keyword))) {
                     return category;
                 }
             }
             
-            return 'variable'; // По умолчанию - переменные затраты
+            return 'variable';
         }
 
         // Получить название категории по ключу
@@ -1652,20 +1587,38 @@
             renderTransactions();
             updateDashboard();
             updateReserveDisplay();
-            renderExpenseClassification();
             renderSavedExpenses();
+            populateYearSelect();
         });
+
+        // Заполнение выпадающего списка годов
+        function populateYearSelect() {
+            const yearSelect = document.getElementById('report-year');
+            const currentYear = new Date().getFullYear();
+            
+            // Очищаем список
+            yearSelect.innerHTML = '';
+            
+            // Добавляем годы от 2020 до текущего года + 1
+            for (let year = 2020; year <= currentYear + 1; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYear) {
+                    option.selected = true;
+                }
+                yearSelect.appendChild(option);
+            }
+        }
 
         // Инициализация Firebase Auth
         function initializeFirebaseAuth() {
             auth.onAuthStateChanged((user) => {
                 if (user) {
-                    // Пользователь вошел в систему
                     currentUser = user;
                     showUserInfo(user);
                     loadFromFirebase();
                 } else {
-                    // Пользователь вышел из системы
                     currentUser = null;
                     hideUserInfo();
                     showAuthModal();
@@ -1709,26 +1662,21 @@
                 if (doc.exists) {
                     const data = doc.data();
                     
-                    // Сохраняем данные из Firebase
                     transactions = data.transactions || [];
                     reserveBalance = data.reserveBalance || 0;
                     savedExpenses = data.savedExpenses || [];
                     
-                    // Сохраняем в localStorage
                     localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
                     localStorage.setItem('carwash_reserve', reserveBalance.toString());
                     localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                     
-                    // Обновляем интерфейс
                     renderTransactions();
                     updateDashboard();
                     updateReserveDisplay();
-                    renderExpenseClassification();
                     renderSavedExpenses();
                     
                     showFirebaseStatus(`Данные успешно загружены (${transactions.length} операций)`, 'success');
                 } else {
-                    // Если документ не существует, сохраняем текущие данные в Firebase
                     await saveToFirebase();
                     showFirebaseStatus('Создан новый профиль в облаке', 'success');
                 }
@@ -1745,7 +1693,6 @@
             try {
                 showFirebaseStatus('Сохранение данных в облако...', 'warning');
                 
-                // Функция для рекурсивной очистки объекта от undefined
                 function removeUndefinedFields(obj) {
                     if (Array.isArray(obj)) {
                         return obj.map(item => 
@@ -1764,7 +1711,6 @@
                     return obj;
                 }
                 
-                // Очищаем данные перед отправкой
                 const cleanedTransactions = removeUndefinedFields(transactions);
                 const cleanedSavedExpenses = removeUndefinedFields(savedExpenses);
                 
@@ -1790,7 +1736,6 @@
             const statusElement = document.getElementById('firebase-status-message');
             statusElement.innerHTML = `<div class="firebase-status firebase-${type}">${message}</div>`;
             
-            // Автоматически скрыть через 5 секунд
             if (type !== 'warning') {
                 setTimeout(() => {
                     statusElement.innerHTML = '';
@@ -1809,104 +1754,14 @@
                     this.classList.add('active');
                     document.getElementById(this.dataset.tab).classList.add('active');
                     
-                    // При переключении на вкладку операций обновляем таблицу классификации
                     if (this.dataset.tab === 'transactions') {
-                        renderExpenseClassification();
+                        renderTransactions();
                     }
                     
-                    // При переключении на вкладку сохраненных расходов обновляем список
                     if (this.dataset.tab === 'saved-expenses') {
                         renderSavedExpenses();
                     }
                 });
-            });
-
-            // Навигация по аналитическим вкладкам
-            document.querySelectorAll('.analysis-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.analysis-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.analysis-content').forEach(c => c.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    document.getElementById(this.dataset.analysis + '-analysis').classList.add('active');
-                });
-            });
-            
-            // Навигация по вкладкам аутентификации
-            document.querySelectorAll('.auth-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    document.getElementById(this.dataset.form + '-form').classList.add('active');
-                });
-            });
-            
-            // Кнопка входа
-            document.getElementById('login-btn').addEventListener('click', function() {
-                showAuthModal();
-            });
-            
-            // Кнопка выхода
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                auth.signOut();
-            });
-            
-            // Кнопка закрытия модального окна аутентификации
-            document.getElementById('close-auth-btn').addEventListener('click', function() {
-                hideAuthModal();
-            });
-            
-            // Форма входа
-            document.getElementById('login-submit-btn').addEventListener('click', function() {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                if (!email || !password) {
-                    showFirebaseStatus('Заполните все поля', 'error');
-                    return;
-                }
-                
-                auth.signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        hideAuthModal();
-                        showFirebaseStatus('Успешный вход', 'success');
-                    })
-                    .catch((error) => {
-                        showFirebaseStatus(`Ошибка входа: ${error.message}`, 'error');
-                    });
-            });
-            
-            // Форма регистрации
-            document.getElementById('register-submit-btn').addEventListener('click', function() {
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('register-confirm-password').value;
-                
-                if (!email || !password || !confirmPassword) {
-                    showFirebaseStatus('Заполните все поля', 'error');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    showFirebaseStatus('Пароли не совпадают', 'error');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    showFirebaseStatus('Пароль должен содержать минимум 6 символов', 'error');
-                    return;
-                }
-                
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        hideAuthModal();
-                        showFirebaseStatus('Успешная регистрация', 'success');
-                    })
-                    .catch((error) => {
-                        showFirebaseStatus(`Ошибка регистрации: ${error.message}`, 'error');
-                    });
             });
             
             // Фильтр периода на дашборде
@@ -1919,10 +1774,19 @@
                 }
                 updateDashboard();
             });
-
-            // Фильтр типа анализа
-            document.getElementById('analysis-type').addEventListener('change', function() {
-                updateDashboard();
+            
+            // Обработчик изменения периода отчета
+            document.getElementById('report-period').addEventListener('change', function() {
+                const yearGroup = document.getElementById('report-year-group');
+                const monthGroup = document.getElementById('report-month-group');
+                
+                if (this.value === 'year') {
+                    yearGroup.style.display = 'block';
+                    monthGroup.style.display = 'none';
+                } else {
+                    yearGroup.style.display = 'block';
+                    monthGroup.style.display = 'block';
+                }
             });
             
             // Поиск операций
@@ -2067,18 +1931,71 @@
                 saveReserveTransaction();
             });
 
-            // Обработчики для модального окна изменения категории расходов
-            document.getElementById('cancel-expense-category-btn').addEventListener('click', function() {
-                hideExpenseCategoryModal();
-            });
-            
-            document.getElementById('save-expense-category-btn').addEventListener('click', function() {
-                saveExpenseCategory();
-            });
-
             // Обработчики для сохраненных расходов
             document.getElementById('add-saved-expense-btn').addEventListener('click', function() {
                 addSavedExpense();
+            });
+
+            // Обработчики для аутентификации
+            document.getElementById('login-btn').addEventListener('click', function() {
+                showAuthModal();
+            });
+            
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                auth.signOut();
+            });
+            
+            document.getElementById('close-auth-btn').addEventListener('click', function() {
+                hideAuthModal();
+            });
+            
+            document.getElementById('login-submit-btn').addEventListener('click', function() {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (!email || !password) {
+                    showFirebaseStatus('Заполните все поля', 'error');
+                    return;
+                }
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        hideAuthModal();
+                        showFirebaseStatus('Успешный вход', 'success');
+                    })
+                    .catch((error) => {
+                        showFirebaseStatus(`Ошибка входа: ${error.message}`, 'error');
+                    });
+            });
+            
+            document.getElementById('register-submit-btn').addEventListener('click', function() {
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                if (!email || !password || !confirmPassword) {
+                    showFirebaseStatus('Заполните все поля', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showFirebaseStatus('Пароли не совпадают', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showFirebaseStatus('Пароль должен содержать минимум 6 символов', 'error');
+                    return;
+                }
+                
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        hideAuthModal();
+                        showFirebaseStatus('Успешная регистрация', 'success');
+                    })
+                    .catch((error) => {
+                        showFirebaseStatus(`Ошибка регистрации: ${error.message}`, 'error');
+                    });
             });
         }
 
@@ -2120,22 +2037,18 @@
             
             savedExpenses.push(newSavedExpense);
             
-            // Сохраняем в localStorage
             localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
             
-            // Сохраняем в Firebase, если пользователь авторизован
             if (currentUser) {
                 saveToFirebase();
             }
             
-            // Очищаем форму
             document.getElementById('saved-expense-category').value = '';
             document.getElementById('saved-expense-payment').value = '';
             document.getElementById('saved-expense-amount').value = '';
             document.getElementById('saved-expense-description').value = '';
             document.getElementById('saved-expense-category-type').value = '';
             
-            // Обновляем интерфейс
             renderSavedExpenses();
             
             alert('Шаблон расхода успешно сохранен!');
@@ -2146,15 +2059,12 @@
             if (confirm('Вы уверены, что хотите удалить этот шаблон расхода?')) {
                 savedExpenses = savedExpenses.filter(exp => exp.id !== id);
                 
-                // Сохраняем в localStorage
                 localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                 
-                // Сохраняем в Firebase, если пользователь авторизован
                 if (currentUser) {
                     saveToFirebase();
                 }
                 
-                // Обновляем интерфейс
                 renderSavedExpenses();
             }
         }
@@ -2197,17 +2107,14 @@
             const expense = savedExpenses.find(exp => exp.id === id);
             if (!expense) return;
             
-            // Переключаемся на вкладку операций
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
             document.querySelector('.tab[data-tab="transactions"]').classList.add('active');
             document.getElementById('transactions').classList.add('active');
             
-            // Открываем модальное окно для добавления операции
             showTransactionModal();
             
-            // Заполняем форму данными из сохраненного расхода
             document.getElementById('transaction-type').value = 'expense';
             document.getElementById('transaction-category').value = expense.category;
             document.getElementById('transaction-payment').value = expense.payment;
@@ -2225,86 +2132,6 @@
             
             // Обновляем список сохраненных расходов
             updateSavedExpenseSelect();
-        }
-
-        // Показать модальное окно для изменения категории расходов
-        function showExpenseCategoryModal(transactionId) {
-            const transaction = transactions.find(t => t.id === transactionId);
-            if (!transaction) return;
-            
-            document.getElementById('expense-category-transaction-id').value = transactionId;
-            document.getElementById('expense-category-description').value = transaction.description || '';
-            
-            const autoCategory = classifyExpense(transaction.description);
-            document.getElementById('expense-category-auto-category').value = getExpenseCategoryName(autoCategory);
-            
-            // Устанавливаем текущее значение ручной категории
-            document.getElementById('expense-category-manual').value = transaction.manualExpenseCategory || '';
-            
-            document.getElementById('expense-category-modal').style.display = 'block';
-        }
-
-        // Скрыть модальное окно для изменения категории расходов
-        function hideExpenseCategoryModal() {
-            document.getElementById('expense-category-modal').style.display = 'none';
-        }
-
-        // Сохранить изменения категории расходов
-        function saveExpenseCategory() {
-            const transactionId = document.getElementById('expense-category-transaction-id').value;
-            const manualCategory = document.getElementById('expense-category-manual').value;
-            
-            const transactionIndex = transactions.findIndex(t => t.id === transactionId);
-            if (transactionIndex !== -1) {
-                transactions[transactionIndex].manualExpenseCategory = manualCategory;
-                
-                // Сохраняем в localStorage
-                localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
-                
-                // Сохраняем в Firebase, если пользователь авторизован
-                if (currentUser) {
-                    saveToFirebase();
-                }
-                
-                // Обновляем интерфейс
-                renderTransactions();
-                renderExpenseClassification();
-                updateDashboard();
-                
-                hideExpenseCategoryModal();
-            }
-        }
-
-        // Отображение таблицы классификации расходов
-        function renderExpenseClassification() {
-            const tbody = document.getElementById('expense-classification-body');
-            const expenseTransactions = transactions.filter(t => t.type === 'expense');
-            
-            if (expenseTransactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Нет расходных операций</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = '';
-            
-            expenseTransactions.forEach(transaction => {
-                const row = document.createElement('tr');
-                const autoCategory = classifyExpense(transaction.description);
-                const manualCategory = transaction.manualExpenseCategory || '';
-                
-                row.innerHTML = `
-                    <td>${formatDate(transaction.date)}</td>
-                    <td>${transaction.description || ''}</td>
-                    <td>${transaction.amount.toFixed(2)} руб.</td>
-                    <td>${getExpenseCategoryName(autoCategory)}</td>
-                    <td>${manualCategory ? getExpenseCategoryName(manualCategory) : 'Не задана'}</td>
-                    <td>
-                        <button onclick="showExpenseCategoryModal('${transaction.id}')">Изменить</button>
-                    </td>
-                `;
-                
-                tbody.appendChild(row);
-            });
         }
         
         // Показать модальное окно операции
@@ -2454,7 +2281,6 @@
             hideReserveModal();
             updateReserveDisplay();
             renderTransactions();
-            renderExpenseClassification();
             updateDashboard();
         }
         
@@ -2521,7 +2347,6 @@
             // Обновляем интерфейс
             hideTransactionModal();
             renderTransactions();
-            renderExpenseClassification();
             updateDashboard();
         }
         
@@ -2537,7 +2362,6 @@
                 }
                 
                 renderTransactions();
-                renderExpenseClassification();
                 updateDashboard();
             }
         }
@@ -2652,36 +2476,343 @@
             });
         }
 
+        // Обновление дашборда
+        function updateDashboard() {
+            const filteredTransactions = filterTransactionsByPeriod();
+            
+            const {
+                detailingIncome, detailingExpense, detailingNet,
+                self12Income, self12Expense, self12Net,
+                self35Income, self35Expense, self35Net,
+                chingizProfit, sultanProfit, totalProfit,
+                mutualSettlement
+            } = calculateProfits(filteredTransactions);
+
+            // Расширенный анализ прибыльности
+            const advancedAnalysis = calculateAdvancedProfits(filteredTransactions);
+            updateAdvancedAnalytics(advancedAnalysis);
+            createMiniCharts(filteredTransactions, advancedAnalysis);
+            createTrendCharts();
+
+            // Обновление интерфейса
+            document.getElementById('detailing-profit-stat').textContent = `${detailingNet.toFixed(2)} руб.`;
+            document.getElementById('detailing-margin-stat').textContent = `Маржа: ${advancedAnalysis.detailing.grossMargin.toFixed(1)}%`;
+            
+            document.getElementById('self12-profit-stat').textContent = `${self12Net.toFixed(2)} руб.`;
+            document.getElementById('self12-margin-stat').textContent = `Маржа: ${advancedAnalysis.self12.grossMargin.toFixed(1)}%`;
+            
+            document.getElementById('self35-profit-stat').textContent = `${self35Net.toFixed(2)} руб.`;
+            document.getElementById('self35-margin-stat').textContent = `Маржа: ${advancedAnalysis.self35.grossMargin.toFixed(1)}%`;
+            
+            // Обновление показателей рентабельности
+            document.getElementById('detailing-profitability').textContent = `${advancedAnalysis.detailing.grossMargin.toFixed(1)}%`;
+            document.getElementById('self12-profitability').textContent = `${advancedAnalysis.self12.grossMargin.toFixed(1)}%`;
+            document.getElementById('self35-profitability').textContent = `${advancedAnalysis.self35.grossMargin.toFixed(1)}%`;
+            
+            document.getElementById('chingiz-profit-stat').textContent = `${chingizProfit.toFixed(2)} руб.`;
+            document.getElementById('sultan-profit-stat').textContent = `${sultanProfit.toFixed(2)} руб.`;
+            document.getElementById('total-profit-stat').textContent = `${totalProfit.toFixed(2)} руб.`;
+            
+            document.getElementById('settlement-amount').textContent = `${Math.abs(mutualSettlement).toFixed(2)} руб.`;
+            
+            const settlementText = document.getElementById('settlement-text');
+            if (mutualSettlement > 0) {
+                settlementText.textContent = 'Султан должен перевести Чингизу';
+                document.getElementById('settlement-amount').className = 'settlement-amount card-positive';
+            } else if (mutualSettlement < 0) {
+                settlementText.textContent = 'Чингиз должен перевести Султану';
+                document.getElementById('settlement-amount').className = 'settlement-amount card-negative';
+            } else {
+                settlementText.textContent = 'Расчеты сбалансированы';
+                document.getElementById('settlement-amount').className = 'settlement-amount card-neutral';
+            }
+        }
+        
+        // Создание мини-графиков для нового дизайна дашборда
+        function createMiniCharts(transactions, analysisData) {
+            const { detailing, self12, self35 } = analysisData;
+
+            // График доходов по категориям
+            const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+            if (incomeChart) incomeChart.destroy();
+            
+            incomeChart = new Chart(incomeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
+                    datasets: [{
+                        data: [detailing.income, self12.income, self35.income],
+                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // График расходов по категориям
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            if (expenseChart) expenseChart.destroy();
+            
+            expenseChart = new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
+                    datasets: [{
+                        data: [detailing.operatingExpenses, self12.operatingExpenses, self35.operatingExpenses],
+                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // График прибыли по направлениям
+            const profitCtx = document.getElementById('profitChart').getContext('2d');
+            if (profitChart) profitChart.destroy();
+            
+            profitChart = new Chart(profitCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
+                    datasets: [{
+                        label: 'Чистая прибыль',
+                        data: [detailing.netProfit, self12.netProfit, self35.netProfit],
+                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // График способов оплаты
+            const paymentMethods = {
+                'sultan_akbars': 0,
+                'sultan_sber': 0,
+                'chingiz_cash': 0,
+                'chingiz_card': 0,
+                'sultan_sber_cash': 0,
+                'chingiz_cash_self': 0,
+                'reserve': 0
+            };
+            
+            transactions
+                .filter(t => t.type === 'income')
+                .forEach(t => {
+                    if (paymentMethods.hasOwnProperty(t.payment)) {
+                        paymentMethods[t.payment] += t.amount;
+                    }
+                });
+            
+            const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+            if (paymentChart) paymentChart.destroy();
+            
+            paymentChart = new Chart(paymentCtx, {
+                type: 'pie',
+                data: {
+                    labels: [
+                        'Счет АББ Султана',
+                        'Счет Сбер Султана',
+                        'Наличные (Чингиз)',
+                        'Счет Чингиза',
+                        'Счет Сбер (Султан)',
+                        'Наличные (Чингиз) - самооб.',
+                        'Резерв'
+                    ],
+                    datasets: [{
+                        data: [
+                            paymentMethods.sultan_akbars,
+                            paymentMethods.sultan_sber,
+                            paymentMethods.chingiz_cash,
+                            paymentMethods.chingiz_card,
+                            paymentMethods.sultan_sber_cash,
+                            paymentMethods.chingiz_cash_self,
+                            paymentMethods.reserve
+                        ],
+                        backgroundColor: [
+                            '#4A6FA5',
+                            '#3A5A8C',
+                            '#D9534F',
+                            '#C9302C',
+                            '#8E44AD',
+                            '#7D3C98',
+                            '#F0AD4E'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+        }
+
+        // Создание графиков трендов
+        function createTrendCharts() {
+            // Подготовка данных за последние 6 месяцев
+            const now = new Date();
+            const months = [];
+            const incomeData = [];
+            const expenseData = [];
+            const profitabilityData = [];
+            
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                const monthName = date.toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' });
+                
+                months.push(monthName);
+                
+                // Фильтруем транзакции за месяц
+                const monthTransactions = transactions.filter(t => {
+                    const transactionDate = new Date(t.date);
+                    return transactionDate.getFullYear() === date.getFullYear() && 
+                           transactionDate.getMonth() === date.getMonth();
+                });
+                
+                // Рассчитываем показатели
+                const monthAnalysis = calculateAdvancedProfits(monthTransactions);
+                const totalIncome = monthAnalysis.totals.totalIncome;
+                const totalExpense = monthAnalysis.totals.totalCosts;
+                const profitability = totalIncome > 0 ? ((totalIncome - totalExpense) / totalIncome) * 100 : 0;
+                
+                incomeData.push(totalIncome);
+                expenseData.push(totalExpense);
+                profitabilityData.push(profitability);
+            }
+            
+            // График динамики доходов
+            const incomeTrendCtx = document.getElementById('incomeTrendChart').getContext('2d');
+            if (incomeTrendChart) incomeTrendChart.destroy();
+            
+            incomeTrendChart = new Chart(incomeTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Доходы',
+                            data: incomeData,
+                            borderColor: '#4A6FA5',
+                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Расходы',
+                            data: expenseData,
+                            borderColor: '#D9534F',
+                            backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // График динамики рентабельности
+            const profitabilityTrendCtx = document.getElementById('profitabilityTrendChart').getContext('2d');
+            if (profitabilityTrendChart) profitabilityTrendChart.destroy();
+            
+            profitabilityTrendChart = new Chart(profitabilityTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Рентабельность (%)',
+                        data: profitabilityData,
+                        borderColor: '#6B8E23',
+                        backgroundColor: 'rgba(107, 142, 35, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Обновление расширенной аналитики на дашборде
+        function updateAdvancedAnalytics(analysisData) {
+            const { detailing, self12, self35, totals } = analysisData;
+
+            const overallMargin = totals.totalIncome > 0 ? (totals.totalNetProfit / totals.totalIncome) * 100 : 0;
+            const grossMargin = totals.totalIncome > 0 ? (totals.totalGrossProfit / totals.totalIncome) * 100 : 0;
+            const netMargin = totals.totalIncome > 0 ? (totals.totalNetProfit / totals.totalIncome) * 100 : 0;
+
+            document.getElementById('overall-margin').textContent = overallMargin.toFixed(1) + '%';
+            document.getElementById('gross-margin').textContent = grossMargin.toFixed(1) + '%';
+            document.getElementById('net-margin').textContent = netMargin.toFixed(1) + '%';
+        }
+
         // Улучшенная функция расчета прибыли с расширенной классификацией расходов
         function calculateAdvancedProfits(transactions) {
-            // Инициализация переменных для детального учета
             const initBusinessMetrics = () => ({
                 income: 0,
-                costOfGoodsSold: 0, // Себестоимость продаж
-                operatingExpenses: 0, // Операционные расходы
-                directCosts: 0, // Прямые затраты
-                indirectCosts: 0, // Косвенные затраты
-                fixedCosts: 0, // Постоянные затраты
-                variableCosts: 0 // Переменные затраты
+                costOfGoodsSold: 0,
+                operatingExpenses: 0,
+                directCosts: 0,
+                indirectCosts: 0,
+                fixedCosts: 0,
+                variableCosts: 0
             });
             
             let detailing = initBusinessMetrics();
             let self12 = initBusinessMetrics();
             let self35 = initBusinessMetrics();
 
-            // Анализ транзакций с улучшенной классификацией
             transactions.forEach(transaction => {
                 const amount = transaction.amount;
                 const category = transaction.category;
                 const description = (transaction.description || '').toLowerCase();
                 
                 if (transaction.type === 'income') {
-                    // Учет доходов
                     if (category === 'detailing') detailing.income += amount;
                     else if (category === 'self12') self12.income += amount;
                     else if (category === 'self35') self35.income += amount;
                 } else if (transaction.type === 'expense') {
-                    // Улучшенная классификация расходов с учетом ручных настроек
                     let expenseCategory;
                     if (transaction.manualExpenseCategory) {
                         expenseCategory = transaction.manualExpenseCategory;
@@ -2689,7 +2820,6 @@
                         expenseCategory = classifyExpense(description);
                     }
                     
-                    // Распределение по направлениям
                     if (category === 'detailing') {
                         detailing[expenseCategory === 'cogs' ? 'costOfGoodsSold' : expenseCategory + 'Costs'] += amount;
                         detailing.operatingExpenses += amount;
@@ -2703,21 +2833,18 @@
                 }
             });
 
-            // Расчет показателей прибыльности
             const calculateProfitMetrics = (business) => {
                 const grossProfit = business.income - business.costOfGoodsSold;
                 const netProfit = grossProfit - business.operatingExpenses;
                 const grossMargin = business.income > 0 ? (grossProfit / business.income) * 100 : 0;
                 const netMargin = business.income > 0 ? (netProfit / business.income) * 100 : 0;
-                const efficiency = business.operatingExpenses > 0 ? netProfit / business.operatingExpenses : 0;
 
                 return {
                     ...business,
                     grossProfit,
                     netProfit,
                     grossMargin,
-                    netMargin,
-                    efficiency
+                    netMargin
                 };
             };
 
@@ -2738,315 +2865,6 @@
             };
         }
 
-        // Обновление расширенной аналитики на дашборде
-        function updateAdvancedAnalytics(analysisData) {
-            const { detailing, self12, self35, totals } = analysisData;
-
-            // Обновление метрик рентабельности
-            const overallMargin = totals.totalIncome > 0 ? (totals.totalNetProfit / totals.totalIncome) * 100 : 0;
-            const grossMargin = totals.totalIncome > 0 ? (totals.totalGrossProfit / totals.totalIncome) * 100 : 0;
-            const netMargin = totals.totalIncome > 0 ? (totals.totalNetProfit / totals.totalIncome) * 100 : 0;
-            const turnoverRatio = totals.totalCosts > 0 ? totals.totalIncome / totals.totalCosts : 0;
-
-            document.getElementById('overall-margin').textContent = overallMargin.toFixed(1) + '%';
-            document.getElementById('gross-margin').textContent = grossMargin.toFixed(1) + '%';
-            document.getElementById('net-margin').textContent = netMargin.toFixed(1) + '%';
-            document.getElementById('turnover-ratio').textContent = turnoverRatio.toFixed(2);
-
-            // Обновление детальной аналитики по направлениям
-            document.getElementById('detailing-gross-profit').textContent = detailing.grossProfit.toFixed(2) + ' руб.';
-            document.getElementById('detailing-margin').textContent = detailing.grossMargin.toFixed(1) + '%';
-            document.getElementById('detailing-cogs').textContent = detailing.costOfGoodsSold.toFixed(2) + ' руб.';
-            document.getElementById('detailing-expenses').textContent = detailing.operatingExpenses.toFixed(2) + ' руб.';
-            document.getElementById('detailing-efficiency').textContent = detailing.efficiency.toFixed(2) + ' руб.';
-
-            document.getElementById('self12-gross-profit').textContent = self12.grossProfit.toFixed(2) + ' руб.';
-            document.getElementById('self12-margin').textContent = self12.grossMargin.toFixed(1) + '%';
-            document.getElementById('self12-cogs').textContent = self12.costOfGoodsSold.toFixed(2) + ' руб.';
-            document.getElementById('self12-expenses').textContent = self12.operatingExpenses.toFixed(2) + ' руб.';
-            document.getElementById('self12-efficiency').textContent = self12.efficiency.toFixed(2) + ' руб.';
-
-            document.getElementById('self35-gross-profit').textContent = self35.grossProfit.toFixed(2) + ' руб.';
-            document.getElementById('self35-margin').textContent = self35.grossMargin.toFixed(1) + '%';
-            document.getElementById('self35-cogs').textContent = self35.costOfGoodsSold.toFixed(2) + ' руб.';
-            document.getElementById('self35-expenses').textContent = self35.operatingExpenses.toFixed(2) + ' руб.';
-            document.getElementById('self35-efficiency').textContent = self35.efficiency.toFixed(2) + ' руб.';
-
-            // Обновление структуры затрат
-            const totalDirect = detailing.directCosts + self12.directCosts + self35.directCosts;
-            const totalIndirect = detailing.indirectCosts + self12.indirectCosts + self35.indirectCosts;
-            const totalFixed = detailing.fixedCosts + self12.fixedCosts + self35.fixedCosts;
-            const totalVariable = detailing.variableCosts + self12.variableCosts + self35.variableCosts;
-            const totalAllCosts = totalDirect + totalIndirect + totalFixed + totalVariable;
-
-            document.getElementById('direct-costs').textContent = totalDirect.toFixed(2) + ' руб.';
-            document.getElementById('indirect-costs').textContent = totalIndirect.toFixed(2) + ' руб.';
-            document.getElementById('fixed-costs').textContent = totalFixed.toFixed(2) + ' руб.';
-            document.getElementById('variable-costs').textContent = totalVariable.toFixed(2) + ' руб.';
-
-            document.getElementById('direct-costs-percent').textContent = totalAllCosts > 0 ? 
-                ((totalDirect / totalAllCosts) * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('indirect-costs-percent').textContent = totalAllCosts > 0 ? 
-                ((totalIndirect / totalAllCosts) * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('fixed-costs-percent').textContent = totalAllCosts > 0 ? 
-                ((totalFixed / totalAllCosts) * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('variable-costs-percent').textContent = totalAllCosts > 0 ? 
-                ((totalVariable / totalAllCosts) * 100).toFixed(1) + '%' : '0%';
-
-            // Обновление трендов
-            updateTrendIndicators();
-        }
-
-        // Обновление индикаторов трендов
-        function updateTrendIndicators() {
-            // Здесь можно добавить логику сравнения с предыдущим периодом
-            const trends = document.querySelectorAll('.trend-indicator');
-            trends.forEach(trend => {
-                // Случайный тренд для демонстрации
-                const random = Math.random();
-                if (random > 0.6) {
-                    trend.textContent = '↗';
-                    trend.className = 'trend-indicator trend-up';
-                } else if (random < 0.4) {
-                    trend.textContent = '↘';
-                    trend.className = 'trend-indicator trend-down';
-                } else {
-                    trend.textContent = '→';
-                    trend.className = 'trend-indicator';
-                }
-            });
-        }
-
-        // Создание графиков для расширенной аналитики
-        function createAdvancedCharts(analysisData) {
-            const { detailing, self12, self35 } = analysisData;
-
-            // График структуры затрат
-            const costCtx = document.getElementById('costStructureChart').getContext('2d');
-            if (costStructureChart) costStructureChart.destroy();
-            
-            costStructureChart = new Chart(costCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
-                    datasets: [{
-                        data: [detailing.operatingExpenses, self12.operatingExpenses, self35.operatingExpenses],
-                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Распределение операционных расходов' }
-                    }
-                }
-            });
-
-            // График трендов прибыли
-            const trendCtx = document.getElementById('profitTrendChart').getContext('2d');
-            if (profitTrendChart) profitTrendChart.destroy();
-            
-            // Генерация демо-данных для трендов
-            const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
-            const currentMonth = new Date().getMonth();
-            const displayMonths = months.slice(Math.max(0, currentMonth - 5), currentMonth + 1);
-            
-            profitTrendChart = new Chart(trendCtx, {
-                type: 'line',
-                data: {
-                    labels: displayMonths,
-                    datasets: [
-                        {
-                            label: 'Валовая прибыль',
-                            data: generateTrendData(displayMonths.length, detailing.grossProfit),
-                            borderColor: '#6B8E23',
-                            backgroundColor: 'rgba(107, 142, 35, 0.1)',
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Чистая прибыль',
-                            data: generateTrendData(displayMonths.length, detailing.netProfit),
-                            borderColor: '#4A6FA5',
-                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: value => value + ' руб.' }
-                        }
-                    }
-                }
-            });
-
-            // График сравнения направлений
-            const compareCtx = document.getElementById('comparisonChart').getContext('2d');
-            if (comparisonChart) comparisonChart.destroy();
-            
-            comparisonChart = new Chart(compareCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Доходы', 'Валовая прибыль', 'Чистая прибыль', 'Рентабельность (%)'],
-                    datasets: [
-                        {
-                            label: 'Детейлинг',
-                            data: [
-                                detailing.income,
-                                detailing.grossProfit,
-                                detailing.netProfit,
-                                detailing.grossMargin
-                            ],
-                            backgroundColor: '#4A6FA5'
-                        },
-                        {
-                            label: 'Посты 1-2',
-                            data: [
-                                self12.income,
-                                self12.grossProfit,
-                                self12.netProfit,
-                                self12.grossMargin
-                            ],
-                            backgroundColor: '#6B8E23'
-                        },
-                        {
-                            label: 'Посты 3-5',
-                            data: [
-                                self35.income,
-                                self35.grossProfit,
-                                self35.netProfit,
-                                self35.grossMargin
-                            ],
-                            backgroundColor: '#F0AD4E'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // График трендов рентабельности
-            const marginCtx = document.getElementById('marginTrendChart').getContext('2d');
-            if (marginTrendChart) marginTrendChart.destroy();
-            
-            marginTrendChart = new Chart(marginCtx, {
-                type: 'line',
-                data: {
-                    labels: displayMonths,
-                    datasets: [
-                        {
-                            label: 'Валовая маржа',
-                            data: generateTrendData(displayMonths.length, detailing.grossMargin, true),
-                            borderColor: '#6B8E23',
-                            backgroundColor: 'rgba(107, 142, 35, 0.1)',
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Чистая маржа',
-                            data: generateTrendData(displayMonths.length, detailing.netMargin, true),
-                            borderColor: '#4A6FA5',
-                            backgroundColor: 'rgba(74, 111, 165, 0.1)',
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { callback: value => value + '%' }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Вспомогательная функция для генерации данных тренда
-        function generateTrendData(length, baseValue, isPercentage = false) {
-            return Array.from({length}, (_, i) => {
-                const progress = (i + 1) / length;
-                const variation = (Math.random() - 0.5) * 0.3; // ±15% variation
-                let value = baseValue * progress * (1 + variation);
-                
-                if (isPercentage) {
-                    value = Math.max(0, Math.min(100, value)); // Ограничиваем проценты 0-100
-                } else {
-                    value = Math.max(0, value); // Прибыль не может быть отрицательной
-                }
-                
-                return value;
-            });
-        }
-        
-        // Обновление дашборда
-        function updateDashboard() {
-            // Получаем отфильтрованные транзакции по выбранному периоду
-            const filteredTransactions = filterTransactionsByPeriod();
-            
-            // Базовый расчет показателей
-            const {
-                detailingIncome, detailingExpense, detailingNet,
-                self12Income, self12Expense, self12Net,
-                self35Income, self35Expense, self35Net,
-                chingizProfit, sultanProfit, totalProfit,
-                mutualSettlement
-            } = calculateProfits(filteredTransactions);
-
-            // Расширенный анализ прибыльности
-            const advancedAnalysis = calculateAdvancedProfits(filteredTransactions);
-            updateAdvancedAnalytics(advancedAnalysis);
-            createAdvancedCharts(advancedAnalysis);
-
-            // Обновление интерфейса
-            document.getElementById('detailing-profit').textContent = `${detailingNet.toFixed(2)} руб.`;
-            document.getElementById('detailing-gross-summary').textContent = `${advancedAnalysis.detailing.grossProfit.toFixed(2)} руб.`;
-            document.getElementById('detailing-net-summary').textContent = `${advancedAnalysis.detailing.netProfit.toFixed(2)} руб.`;
-            document.getElementById('detailing-chingiz').textContent = `${(detailingNet / 2).toFixed(2)} руб.`;
-            document.getElementById('detailing-sultan').textContent = `${(detailingNet / 2).toFixed(2)} руб.`;
-            
-            document.getElementById('self12-profit').textContent = `${self12Net.toFixed(2)} руб.`;
-            document.getElementById('self12-gross-summary').textContent = `${advancedAnalysis.self12.grossProfit.toFixed(2)} руб.`;
-            document.getElementById('self12-net-summary').textContent = `${advancedAnalysis.self12.netProfit.toFixed(2)} руб.`;
-            document.getElementById('self12-chingiz').textContent = `${(self12Net / 2).toFixed(2)} руб.`;
-            document.getElementById('self12-sultan').textContent = `${(self12Net / 2).toFixed(2)} руб.`;
-            
-            document.getElementById('self35-profit').textContent = `${self35Net.toFixed(2)} руб.`;
-            document.getElementById('self35-gross-summary').textContent = `${advancedAnalysis.self35.grossProfit.toFixed(2)} руб.`;
-            document.getElementById('self35-net-summary').textContent = `${advancedAnalysis.self35.netProfit.toFixed(2)} руб.`;
-            
-            document.getElementById('chingiz-profit').textContent = `${chingizProfit.toFixed(2)} руб.`;
-            document.getElementById('sultan-profit').textContent = `${sultanProfit.toFixed(2)} руб.`;
-            document.getElementById('total-profit').textContent = `${totalProfit.toFixed(2)} руб.`;
-            
-            document.getElementById('settlement-amount').textContent = `${Math.abs(mutualSettlement).toFixed(2)} руб.`;
-            
-            const settlementText = document.getElementById('settlement-text');
-            if (mutualSettlement > 0) {
-                settlementText.textContent = 'Султан должен перевести Чингизу';
-                document.getElementById('settlement-amount').className = 'settlement-amount card-positive';
-            } else if (mutualSettlement < 0) {
-                settlementText.textContent = 'Чингиз должен перевести Султану';
-                document.getElementById('settlement-amount').className = 'settlement-amount card-negative';
-            } else {
-                settlementText.textContent = 'Расчеты сбалансированы';
-                document.getElementById('settlement-amount').className = 'settlement-amount card-neutral';
-            }
-            
-            // Обновление графиков
-            updateCharts(filteredTransactions);
-        }
-        
         // Фильтрация транзакций по периоду
         function filterTransactionsByPeriod() {
             const period = document.getElementById('period').value;
@@ -3082,7 +2900,6 @@
                         endDate = new Date(end);
                         endDate.setHours(23, 59, 59, 999);
                     } else {
-                        // Если даты не выбраны, показываем все транзакции
                         return transactions;
                     }
                     break;
@@ -3098,7 +2915,6 @@
         
         // Расчет прибылей и взаимных расчетов
         function calculateProfits(transactions) {
-            // Доходы и расходы по категориям
             let detailingIncome = 0;
             let detailingExpense = 0;
             
@@ -3108,7 +2924,6 @@
             let self35Income = 0;
             let self35Expense = 0;
             
-            // Доходы по способам оплаты для взаимных расчетов
             let detailingIncomeChingiz = 0;
             let detailingIncomeSultan = 0;
             
@@ -3118,7 +2933,6 @@
             let self35IncomeChingiz = 0;
             let self35IncomeSultan = 0;
             
-            // Расходы по способам оплаты для взаимных расчетов
             let detailingExpenseChingiz = 0;
             let detailingExpenseSultan = 0;
             
@@ -3128,7 +2942,6 @@
             let self35ExpenseChingiz = 0;
             let self35ExpenseSultan = 0;
             
-            // Обработка всех транзакций
             transactions.forEach(t => {
                 if (t.type === 'income') {
                     if (t.category === 'detailing') {
@@ -3179,27 +2992,17 @@
                 }
             });
             
-            // Чистая прибыль по категориям
             const detailingNet = detailingIncome - detailingExpense;
             const self12Net = self12Income - self12Expense;
             const self35Net = self35Income - self35Expense;
             
-            // Прибыль партнеров
             const chingizProfit = (detailingNet + self12Net) / 2;
             const sultanProfit = (detailingNet + self12Net) / 2 + self35Net;
             const totalProfit = chingizProfit + sultanProfit;
             
-            // Взаимные расчеты
-            // Чингиз должен получить: chingizProfit
-            // Султан должен получить: sultanProfit
-            
-            // Фактически у Чингиза:
             const chingizActual = (detailingIncomeChingiz + self12IncomeChingiz + self35IncomeChingiz) - 
                                  (detailingExpenseChingiz + self12ExpenseChingiz + self35ExpenseChingiz);
             
-            // mutualSettlement = что должен получить Чингиз - что у него уже есть
-            // Если положительное - Султан должен Чингизу
-            // Если отрицательное - Чингиз должен Султану
             const mutualSettlement = chingizProfit - chingizActual;
             
             return {
@@ -3210,208 +3013,44 @@
                 mutualSettlement
             };
         }
-        
-        // Обновление графиков
-        function updateCharts(transactions) {
-            // Доходы по категориям
-            const detailingIncome = transactions
-                .filter(t => t.type === 'income' && t.category === 'detailing')
-                .reduce((sum, t) => sum + t.amount, 0);
-                
-            const self12Income = transactions
-                .filter(t => t.type === 'income' && t.category === 'self12')
-                .reduce((sum, t) => sum + t.amount, 0);
-                
-            const self35Income = transactions
-                .filter(t => t.type === 'income' && t.category === 'self35')
-                .reduce((sum, t) => sum + t.amount, 0);
-            
-            // Расходы по категориям
-            const detailingExpense = transactions
-                .filter(t => t.type === 'expense' && t.category === 'detailing')
-                .reduce((sum, t) => sum + t.amount, 0);
-                
-            const self12Expense = transactions
-                .filter(t => t.type === 'expense' && t.category === 'self12')
-                .reduce((sum, t) => sum + t.amount, 0);
-                
-            const self35Expense = transactions
-                .filter(t => t.type === 'expense' && t.category === 'self35')
-                .reduce((sum, t) => sum + t.amount, 0);
-            
-            // График доходов и расходов по категориям
-            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-            
-            // Удаляем предыдущий график, если он существует
-            if (incomeExpenseChart) {
-                incomeExpenseChart.destroy();
-            }
-            
-            incomeExpenseChart = new Chart(incomeExpenseCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Детейлинг', 'Самообслуживание (1-2)', 'Самообслуживание (3-5)'],
-                    datasets: [
-                        {
-                            label: 'Доходы',
-                            data: [detailingIncome, self12Income, self35Income],
-                            backgroundColor: '#6B8E23',
-                            borderColor: '#5A7E1A',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Расходы',
-                            data: [detailingExpense, self12Expense, self35Expense],
-                            backgroundColor: '#D9534F',
-                            borderColor: '#C9302C',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return value + ' руб.';
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Доходы и расходы по категориям'
-                        }
-                    }
-                }
-            });
-            
-            // График доходов по способам оплаты
-            const paymentMethods = {
-                'sultan_akbars': 0,
-                'sultan_sber': 0,
-                'chingiz_cash': 0,
-                'chingiz_card': 0,
-                'sultan_sber_cash': 0,
-                'chingiz_cash_self': 0,
-                'reserve': 0
-            };
-            
-            transactions
-                .filter(t => t.type === 'income')
-                .forEach(t => {
-                    if (paymentMethods.hasOwnProperty(t.payment)) {
-                        paymentMethods[t.payment] += t.amount;
-                    }
-                });
-            
-            const paymentCtx = document.getElementById('paymentChart').getContext('2d');
-            
-            // Удаляем предыдущий график, если он существует
-            if (paymentChart) {
-                paymentChart.destroy();
-            }
-            
-            paymentChart = new Chart(paymentCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [
-                        'Счет АББ Султана',
-                        'Счет Сбер Султана',
-                        'Наличные (Чингиз)',
-                        'Счет Чингиза',
-                        'Счет Сбер (Султан) - самообслуживание',
-                        'Наличные (Чингиз) - самообслуживание',
-                        'Резервный фонд Чингиза'
-                    ],
-                    datasets: [{
-                        data: [
-                            paymentMethods.sultan_akbars,
-                            paymentMethods.sultan_sber,
-                            paymentMethods.chingiz_cash,
-                            paymentMethods.chingiz_card,
-                            paymentMethods.sultan_sber_cash,
-                            paymentMethods.chingiz_cash_self,
-                            paymentMethods.reserve
-                        ],
-                        backgroundColor: [
-                            '#4A6FA5',
-                            '#3A5A8C',
-                            '#D9534F',
-                            '#C9302C',
-                            '#8E44AD',
-                            '#7D3C98',
-                            '#F0AD4E'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Распределение доходов по способам оплаты'
-                        }
-                    }
-                }
-            });
-        }
-        
-        // Генерация отчета
+
+        // Генерация отчета с улучшенной детализацией
         function generateReport() {
             const reportPeriod = document.getElementById('report-period').value;
+            const reportYear = document.getElementById('report-year').value;
             const reportMonth = document.getElementById('report-month').value;
             
             let startDate, endDate;
-            const now = new Date();
             
-            if (reportMonth) {
-                const [year, month] = reportMonth.split('-');
-                if (reportPeriod === 'first_half') {
-                    // 1-15 число месяца включительно до 23:59:59.999
-                    startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month - 1, 15, 23, 59, 59, 999);
-                } else if (reportPeriod === 'second_half') {
-                    // 16 число месяца до последнего дня месяца включительно до 23:59:59.999
-                    startDate = new Date(year, month - 1, 16);
-                    endDate = new Date(year, month, 0, 23, 59, 59, 999); // Последний день месяца 23:59:59.999
-                } else {
-                    startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month, 0, 23, 59, 59, 999); // Последний день месяца 23:59:59.999
-                }
+            if (reportPeriod === 'year') {
+                // Годовой отчет
+                startDate = new Date(reportYear, 0, 1);
+                endDate = new Date(reportYear, 11, 31, 23, 59, 59, 999);
+            } else if (reportPeriod === 'first_half') {
+                // Первая половина месяца
+                startDate = new Date(reportYear, reportMonth - 1, 1);
+                endDate = new Date(reportYear, reportMonth - 1, 15, 23, 59, 59, 999);
+            } else if (reportPeriod === 'second_half') {
+                // Вторая половина месяца
+                startDate = new Date(reportYear, reportMonth - 1, 16);
+                endDate = new Date(reportYear, reportMonth, 0, 23, 59, 59, 999);
+            } else if (reportPeriod === 'current_month') {
+                // Текущий месяц
+                const now = new Date();
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
             } else {
-                // Если месяц не выбран, используем текущий месяц
-                const currentYear = now.getFullYear();
-                const currentMonth = now.getMonth();
-                
-                if (reportPeriod === 'first_half') {
-                    startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth, 15, 23, 59, 59, 999);
-                } else if (reportPeriod === 'second_half') {
-                    startDate = new Date(currentYear, currentMonth, 16);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
-                } else {
-                    startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth + 1, 0, 23, 59, 59, 999);
-                }
+                // Произвольный период (не реализовано в этой версии)
+                const now = new Date();
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
             }
             
-            // Фильтрация транзакций по периоду отчета
             const reportTransactions = transactions.filter(t => {
                 const transactionDate = new Date(t.date);
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
             
-            // Расчет показателей для отчета
             const {
                 detailingIncome, detailingExpense, detailingNet,
                 self12Income, self12Expense, self12Net,
@@ -3420,67 +3059,100 @@
                 mutualSettlement
             } = calculateProfits(reportTransactions);
 
-            // Расширенный анализ для отчета
             const advancedAnalysis = calculateAdvancedProfits(reportTransactions);
             
-            // Разделение транзакций на доходы и расходы
             const incomeTransactions = reportTransactions.filter(t => t.type === 'income');
             const expenseTransactions = reportTransactions.filter(t => t.type === 'expense');
             
-            // Расчет доходов и расходов по счетам
             let sultanIncome = 0;
             let chingizIncome = 0;
             let sultanExpense = 0;
             let chingizExpense = 0;
             
-            // Детализация по источникам для Султана и Чингиза
+            // Детализация по источникам для Султана и Чингиза с разделением по постам
             let sultanIncomeDetails = {
                 'sultan_akbars': 0,
                 'sultan_sber': 0,
-                'sultan_sber_cash': 0
+                'sultan_sber_cash': 0,
+                'self12_sultan': 0, // посты 1-2 Султана
+                'self35_sultan': 0  // посты 3-5 Султана
             };
             
             let chingizIncomeDetails = {
                 'chingiz_cash': 0,
                 'chingiz_card': 0,
-                'chingiz_cash_self': 0,
+                'chingiz_cash_self12': 0, // наличные от постов 1-2
+                'chingiz_cash_self35': 0, // наличные от постов 3-5
                 'reserve': 0
             };
             
             let sultanExpenseDetails = {
                 'sultan_akbars': 0,
                 'sultan_sber': 0,
-                'sultan_sber_cash': 0
+                'sultan_sber_cash': 0,
+                'self12_sultan': 0, // расходы по постам 1-2 Султана
+                'self35_sultan': 0  // расходы по постам 3-5 Султана
             };
             
             let chingizExpenseDetails = {
                 'chingiz_cash': 0,
                 'chingiz_card': 0,
-                'chingiz_cash_self': 0,
+                'chingiz_cash_self12': 0,
+                'chingiz_cash_self35': 0,
                 'reserve': 0
             };
             
-            incomeTransactions.forEach(t => {
-                if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
-                    sultanIncome += t.amount;
-                    sultanIncomeDetails[t.payment] += t.amount;
-                } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
-                    chingizIncome += t.amount;
-                    chingizIncomeDetails[t.payment] += t.amount;
+            reportTransactions.forEach(t => {
+                if (t.type === 'income') {
+                    if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                        sultanIncome += t.amount;
+                        sultanIncomeDetails[t.payment] += t.amount;
+                        
+                        // Разделяем доходы Султана по постам
+                        if (t.category === 'self12') {
+                            sultanIncomeDetails['self12_sultan'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            sultanIncomeDetails['self35_sultan'] += t.amount;
+                        }
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'reserve') {
+                        chingizIncome += t.amount;
+                        chingizIncomeDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash_self') {
+                        chingizIncome += t.amount;
+                        // Разделяем наличные по постам
+                        if (t.category === 'self12') {
+                            chingizIncomeDetails['chingiz_cash_self12'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            chingizIncomeDetails['chingiz_cash_self35'] += t.amount;
+                        }
+                    }
+                } else {
+                    if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
+                        sultanExpense += t.amount;
+                        sultanExpenseDetails[t.payment] += t.amount;
+                        
+                        // Разделяем расходы Султана по постам
+                        if (t.category === 'self12') {
+                            sultanExpenseDetails['self12_sultan'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            sultanExpenseDetails['self35_sultan'] += t.amount;
+                        }
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'reserve') {
+                        chingizExpense += t.amount;
+                        chingizExpenseDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash_self') {
+                        chingizExpense += t.amount;
+                        // Разделяем наличные по постам
+                        if (t.category === 'self12') {
+                            chingizExpenseDetails['chingiz_cash_self12'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            chingizExpenseDetails['chingiz_cash_self35'] += t.amount;
+                        }
+                    }
                 }
             });
             
-            expenseTransactions.forEach(t => {
-                if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
-                    sultanExpense += t.amount;
-                    sultanExpenseDetails[t.payment] += t.amount;
-                } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
-                    chingizExpense += t.amount;
-                    chingizExpenseDetails[t.payment] += t.amount;
-                }
-            });
-            
-            // Формирование HTML отчета
+            // Формирование HTML отчета с улучшенной детализацией
             let reportHTML = `
                 <h3>Отчет за период: ${formatDate(startDate)} - ${formatDate(endDate)}</h3>
                 
@@ -3523,6 +3195,14 @@
                                 <span>Счет Сбер (Султан) - самообслуживание:</span>
                                 <span>${sultanIncomeDetails.sultan_sber_cash.toFixed(2)} руб.</span>
                             </div>
+                            <div class="account-item">
+                                <span>Доходы от постов 1-2:</span>
+                                <span>${sultanIncomeDetails.self12_sultan.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Доходы от постов 3-5:</span>
+                                <span>${sultanIncomeDetails.self35_sultan.toFixed(2)} руб.</span>
+                            </div>
                             <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
                                 <span>Итого доходы Султана:</span>
                                 <span>${sultanIncome.toFixed(2)} руб.</span>
@@ -3542,8 +3222,12 @@
                                 <span>${chingizIncomeDetails.chingiz_card.toFixed(2)} руб.</span>
                             </div>
                             <div class="account-item">
-                                <span>Наличные (Чингиз) - самообслуживание:</span>
-                                <span>${chingizIncomeDetails.chingiz_cash_self.toFixed(2)} руб.</span>
+                                <span>Наличные (Чингиз) - самообслуживание (посты 1-2):</span>
+                                <span>${chingizIncomeDetails.chingiz_cash_self12.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Наличные (Чингиз) - самообслуживание (посты 3-5):</span>
+                                <span>${chingizIncomeDetails.chingiz_cash_self35.toFixed(2)} руб.</span>
                             </div>
                             <div class="account-item">
                                 <span>Резервный фонд Чингиза:</span>
@@ -3571,6 +3255,14 @@
                                 <span>Счет Сбер (Султан) - самообслуживание:</span>
                                 <span>${sultanExpenseDetails.sultan_sber_cash.toFixed(2)} руб.</span>
                             </div>
+                            <div class="account-item">
+                                <span>Расходы по постам 1-2:</span>
+                                <span>${sultanExpenseDetails.self12_sultan.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Расходы по постам 3-5:</span>
+                                <span>${sultanExpenseDetails.self35_sultan.toFixed(2)} руб.</span>
+                            </div>
                             <div class="account-item" style="border-top: 1px solid var(--dark); font-weight: bold;">
                                 <span>Итого расходы Султана:</span>
                                 <span>${sultanExpense.toFixed(2)} руб.</span>
@@ -3590,8 +3282,12 @@
                                 <span>${chingizExpenseDetails.chingiz_card.toFixed(2)} руб.</span>
                             </div>
                             <div class="account-item">
-                                <span>Наличные (Чингиз) - самообслуживание:</span>
-                                <span>${chingizExpenseDetails.chingiz_cash_self.toFixed(2)} руб.</span>
+                                <span>Наличные (Чингиз) - самообслуживание (посты 1-2):</span>
+                                <span>${chingizExpenseDetails.chingiz_cash_self12.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="account-item">
+                                <span>Наличные (Чингиз) - самообслуживание (посты 3-5):</span>
+                                <span>${chingizExpenseDetails.chingiz_cash_self35.toFixed(2)} руб.</span>
                             </div>
                             <div class="account-item">
                                 <span>Резервный фонд Чингиза:</span>
@@ -3630,200 +3326,53 @@
                         <p>Чистая прибыль: ${self35Net.toFixed(2)} руб.</p>
                     </div>
                 </div>
-                
-                <div class="chart-container">
-                    <h4>Расширенная аналитика прибыльности</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Показатель</th>
-                                <th>Детейлинг</th>
-                                <th>Посты 1-2</th>
-                                <th>Посты 3-5</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Валовая прибыль</td>
-                                <td>${advancedAnalysis.detailing.grossProfit.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.grossProfit.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.grossProfit.toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Валовая маржа</td>
-                                <td>${advancedAnalysis.detailing.grossMargin.toFixed(1)}%</td>
-                                <td>${advancedAnalysis.self12.grossMargin.toFixed(1)}%</td>
-                                <td>${advancedAnalysis.self35.grossMargin.toFixed(1)}%</td>
-                            </tr>
-                            <tr>
-                                <td>Чистая прибыль</td>
-                                <td>${advancedAnalysis.detailing.netProfit.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.netProfit.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.netProfit.toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Чистая маржа</td>
-                                <td>${advancedAnalysis.detailing.netMargin.toFixed(1)}%</td>
-                                <td>${advancedAnalysis.self12.netMargin.toFixed(1)}%</td>
-                                <td>${advancedAnalysis.self35.netMargin.toFixed(1)}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="chart-container">
-                    <h4>Детализация по категориям расходов</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Категория расходов</th>
-                                <th>Детейлинг</th>
-                                <th>Посты 1-2</th>
-                                <th>Посты 3-5</th>
-                                <th>Итого</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Себестоимость (COGS)</td>
-                                <td>${advancedAnalysis.detailing.costOfGoodsSold.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.costOfGoodsSold.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.costOfGoodsSold.toFixed(2)} руб.</td>
-                                <td>${(advancedAnalysis.detailing.costOfGoodsSold + advancedAnalysis.self12.costOfGoodsSold + advancedAnalysis.self35.costOfGoodsSold).toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Прямые затраты</td>
-                                <td>${advancedAnalysis.detailing.directCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.directCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.directCosts.toFixed(2)} руб.</td>
-                                <td>${(advancedAnalysis.detailing.directCosts + advancedAnalysis.self12.directCosts + advancedAnalysis.self35.directCosts).toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Косвенные затраты</td>
-                                <td>${advancedAnalysis.detailing.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${(advancedAnalysis.detailing.indirectCosts + advancedAnalysis.self12.indirectCosts + advancedAnalysis.self35.indirectCosts).toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Постоянные затраты</td>
-                                <td>${advancedAnalysis.detailing.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${(advancedAnalysis.detailing.fixedCosts + advancedAnalysis.self12.fixedCosts + advancedAnalysis.self35.fixedCosts).toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Переменные затраты</td>
-                                <td>${advancedAnalysis.detailing.variableCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self12.variableCosts.toFixed(2)} руб.</td>
-                                <td>${advancedAnalysis.self35.variableCosts.toFixed(2)} руб.</td>
-                                <td>${(advancedAnalysis.detailing.variableCosts + advancedAnalysis.self12.variableCosts + advancedAnalysis.self35.variableCosts).toFixed(2)} руб.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="chart-container">
-                    <h4>Операции за период</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Тип</th>
-                                <th>Категория</th>
-                                <th>Способ оплаты</th>
-                                <th>Сумма</th>
-                                <th>Описание</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            reportTransactions.forEach(t => {
-                reportHTML += `
-                    <tr>
-                        <td>${formatDate(t.date)}</td>
-                        <td>${getTypeLabel(t.type)}</td>
-                        <td>${getCategoryLabel(t.category)}</td>
-                        <td>${getPaymentLabel(t.payment)}</td>
-                        <td>${t.amount.toFixed(2)} руб.</td>
-                        <td>${t.description || ''}</td>
-                    </tr>
-                `;
-            });
-            
-            reportHTML += `
-                        </tbody>
-                    </table>
-                </div>
             `;
             
             document.getElementById('report-content').innerHTML = reportHTML;
         }
-        
-        // Сохранение отчета
-        function saveReport() {
-            const reportContent = document.getElementById('report-content').innerHTML;
-            const blob = new Blob([reportContent], {type: 'text/html'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Отчет_${new Date().toISOString().split('T')[0]}.html`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-        
-        // Экспорт отчета в Excel
+
+        // Экспорт отчета в Excel с улучшенной детализацией
         function exportReportToExcel() {
             const reportPeriod = document.getElementById('report-period').value;
+            const reportYear = document.getElementById('report-year').value;
             const reportMonth = document.getElementById('report-month').value;
             
-            // Определяем период отчета
             let startDate, endDate;
-            const now = new Date();
             
-            if (reportMonth) {
-                const [year, month] = reportMonth.split('-');
-                if (reportPeriod === 'first_half') {
-                    startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month - 1, 15);
-                } else if (reportPeriod === 'second_half') {
-                    startDate = new Date(year, month - 1, 16);
-                    endDate = new Date(year, month, 0);
-                } else {
-                    startDate = new Date(year, month - 1, 1);
-                    endDate = new Date(year, month, 0);
-                }
+            if (reportPeriod === 'year') {
+                // Годовой отчет
+                startDate = new Date(reportYear, 0, 1);
+                endDate = new Date(reportYear, 11, 31);
+            } else if (reportPeriod === 'first_half') {
+                // Первая половина месяца
+                startDate = new Date(reportYear, reportMonth - 1, 1);
+                endDate = new Date(reportYear, reportMonth - 1, 15);
+            } else if (reportPeriod === 'second_half') {
+                // Вторая половина месяца
+                startDate = new Date(reportYear, reportMonth - 1, 16);
+                endDate = new Date(reportYear, reportMonth, 0);
+            } else if (reportPeriod === 'current_month') {
+                // Текущий месяц
+                const now = new Date();
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             } else {
-                const currentYear = now.getFullYear();
-                const currentMonth = now.getMonth();
-                
-                if (reportPeriod === 'first_half') {
-                    startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth, 15);
-                } else if (reportPeriod === 'second_half') {
-                    startDate = new Date(currentYear, currentMonth, 16);
-                    endDate = new Date(currentYear, currentMonth + 1, 0);
-                } else {
-                    startDate = new Date(currentYear, currentMonth, 1);
-                    endDate = new Date(currentYear, currentMonth + 1, 0);
-                }
+                // Произвольный период (не реализовано в этой версии)
+                const now = new Date();
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
             }
             
-            // Фильтрация транзакций по периоду отчета
             const reportTransactions = transactions.filter(t => {
                 const transactionDate = new Date(t.date);
                 return transactionDate >= startDate && transactionDate <= endDate;
             });
             
-            // Подготовка данных для Excel
             const data = [];
             
-            // Добавляем заголовок
             data.push(['Отчет за период:', `${formatDate(startDate)} - ${formatDate(endDate)}`]);
             data.push([]);
             
-            // Сводные показатели
             const {
                 detailingIncome, detailingExpense, detailingNet,
                 self12Income, self12Expense, self12Net,
@@ -3840,41 +3389,42 @@
             data.push(['Направление:', mutualSettlement > 0 ? 'Султан → Чингиз' : mutualSettlement < 0 ? 'Чингиз → Султан' : 'Сбалансировано']);
             data.push([]);
             
-            // Прибыль по направлениям
             data.push(['Прибыль по направлениям']);
             data.push(['Детейлинг:', `${detailingNet.toFixed(2)} руб.`]);
             data.push(['Самообслуживание (посты 1-2):', `${self12Net.toFixed(2)} руб.`]);
             data.push(['Самообслуживание (посты 3-5):', `${self35Net.toFixed(2)} руб.`]);
             data.push([]);
             
-            // Детализация по счетам
-            // Доходы по счетам Султана
+            // Детализация по счетам с разделением по постам
             let sultanIncomeDetails = {
                 'sultan_akbars': 0,
                 'sultan_sber': 0,
-                'sultan_sber_cash': 0
+                'sultan_sber_cash': 0,
+                'self12_sultan': 0,
+                'self35_sultan': 0
             };
             
-            // Доходы по счетам Чингиза
             let chingizIncomeDetails = {
                 'chingiz_cash': 0,
                 'chingiz_card': 0,
-                'chingiz_cash_self': 0,
+                'chingiz_cash_self12': 0,
+                'chingiz_cash_self35': 0,
                 'reserve': 0
             };
             
-            // Расходы по счетам Султана
             let sultanExpenseDetails = {
                 'sultan_akbars': 0,
                 'sultan_sber': 0,
-                'sultan_sber_cash': 0
+                'sultan_sber_cash': 0,
+                'self12_sultan': 0,
+                'self35_sultan': 0
             };
             
-            // Расходы по счетам Чингиза
             let chingizExpenseDetails = {
                 'chingiz_cash': 0,
                 'chingiz_card': 0,
-                'chingiz_cash_self': 0,
+                'chingiz_cash_self12': 0,
+                'chingiz_cash_self35': 0,
                 'reserve': 0
             };
             
@@ -3882,14 +3432,40 @@
                 if (t.type === 'income') {
                     if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
                         sultanIncomeDetails[t.payment] += t.amount;
-                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                        
+                        // Разделяем доходы Султана по постам
+                        if (t.category === 'self12') {
+                            sultanIncomeDetails['self12_sultan'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            sultanIncomeDetails['self35_sultan'] += t.amount;
+                        }
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'reserve') {
                         chingizIncomeDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash_self') {
+                        if (t.category === 'self12') {
+                            chingizIncomeDetails['chingiz_cash_self12'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            chingizIncomeDetails['chingiz_cash_self35'] += t.amount;
+                        }
                     }
                 } else {
                     if (t.payment === 'sultan_akbars' || t.payment === 'sultan_sber' || t.payment === 'sultan_sber_cash') {
                         sultanExpenseDetails[t.payment] += t.amount;
-                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'chingiz_cash_self' || t.payment === 'reserve') {
+                        
+                        // Разделяем расходы Султана по постам
+                        if (t.category === 'self12') {
+                            sultanExpenseDetails['self12_sultan'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            sultanExpenseDetails['self35_sultan'] += t.amount;
+                        }
+                    } else if (t.payment === 'chingiz_cash' || t.payment === 'chingiz_card' || t.payment === 'reserve') {
                         chingizExpenseDetails[t.payment] += t.amount;
+                    } else if (t.payment === 'chingiz_cash_self') {
+                        if (t.category === 'self12') {
+                            chingizExpenseDetails['chingiz_cash_self12'] += t.amount;
+                        } else if (t.category === 'self35') {
+                            chingizExpenseDetails['chingiz_cash_self35'] += t.amount;
+                        }
                     }
                 }
             });
@@ -3898,13 +3474,16 @@
             data.push(['Счет АББ Султана:', `${sultanIncomeDetails.sultan_akbars.toFixed(2)} руб.`]);
             data.push(['Счет Сбер Султана:', `${sultanIncomeDetails.sultan_sber.toFixed(2)} руб.`]);
             data.push(['Счет Сбер (Султан) - самообслуживание:', `${sultanIncomeDetails.sultan_sber_cash.toFixed(2)} руб.`]);
+            data.push(['Доходы от постов 1-2:', `${sultanIncomeDetails.self12_sultan.toFixed(2)} руб.`]);
+            data.push(['Доходы от постов 3-5:', `${sultanIncomeDetails.self35_sultan.toFixed(2)} руб.`]);
             data.push(['Итого доходы Султана:', `${Object.values(sultanIncomeDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
             data.push([]);
             
             data.push(['Доходы по счетам Чингиза']);
             data.push(['Наличные (Чингиз):', `${chingizIncomeDetails.chingiz_cash.toFixed(2)} руб.`]);
             data.push(['Счет Чингиза:', `${chingizIncomeDetails.chingiz_card.toFixed(2)} руб.`]);
-            data.push(['Наличные (Чингиз) - самообслуживание:', `${chingizIncomeDetails.chingiz_cash_self.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание (посты 1-2):', `${chingizIncomeDetails.chingiz_cash_self12.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание (посты 3-5):', `${chingizIncomeDetails.chingiz_cash_self35.toFixed(2)} руб.`]);
             data.push(['Резервный фонд Чингиза:', `${chingizIncomeDetails.reserve.toFixed(2)} руб.`]);
             data.push(['Итого доходы Чингиза:', `${Object.values(chingizIncomeDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
             data.push([]);
@@ -3913,13 +3492,16 @@
             data.push(['Счет АББ Султана:', `${sultanExpenseDetails.sultan_akbars.toFixed(2)} руб.`]);
             data.push(['Счет Сбер Султана:', `${sultanExpenseDetails.sultan_sber.toFixed(2)} руб.`]);
             data.push(['Счет Сбер (Султан) - самообслуживание:', `${sultanExpenseDetails.sultan_sber_cash.toFixed(2)} руб.`]);
+            data.push(['Расходы по постам 1-2:', `${sultanExpenseDetails.self12_sultan.toFixed(2)} руб.`]);
+            data.push(['Расходы по постам 3-5:', `${sultanExpenseDetails.self35_sultan.toFixed(2)} руб.`]);
             data.push(['Итого расходы Султана:', `${Object.values(sultanExpenseDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
             data.push([]);
             
             data.push(['Расходы по счетам Чингиза']);
             data.push(['Наличные (Чингиз):', `${chingizExpenseDetails.chingiz_cash.toFixed(2)} руб.`]);
             data.push(['Счет Чингиза:', `${chingizExpenseDetails.chingiz_card.toFixed(2)} руб.`]);
-            data.push(['Наличные (Чингиз) - самообслуживание:', `${chingizExpenseDetails.chingiz_cash_self.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание (посты 1-2):', `${chingizExpenseDetails.chingiz_cash_self12.toFixed(2)} руб.`]);
+            data.push(['Наличные (Чингиз) - самообслуживание (посты 3-5):', `${chingizExpenseDetails.chingiz_cash_self35.toFixed(2)} руб.`]);
             data.push(['Резервный фонд Чингиза:', `${chingizExpenseDetails.reserve.toFixed(2)} руб.`]);
             data.push(['Итого расходы Чингиза:', `${Object.values(chingizExpenseDetails).reduce((a, b) => a + b, 0).toFixed(2)} руб.`]);
             data.push([]);
@@ -3939,23 +3521,19 @@
                 ]);
             });
             
-            // Создание книги Excel
             const ws = XLSX.utils.aoa_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Отчет');
             
-            // Экспорт в файл
             XLSX.writeFile(wb, `Отчет_${formatDate(startDate)}_${formatDate(endDate)}.xlsx`);
         }
-        
-        // Экспорт данных в Excel
+
+        // Остальные функции (экспорт, импорт, вспомогательные)
         function exportToExcel() {
             const data = [];
             
-            // Заголовок
             data.push(['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание']);
             
-            // Данные
             transactions.forEach(t => {
                 data.push([
                     t.date,
@@ -3967,16 +3545,13 @@
                 ]);
             });
             
-            // Создание книги Excel
             const ws = XLSX.utils.aoa_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Операции');
             
-            // Экспорт в файл
             XLSX.writeFile(wb, 'Операции_автомойка.xlsx');
         }
         
-        // Экспорт данных в JSON (резервная копия)
         function exportData(isBackup = false) {
             const data = {
                 transactions: transactions,
@@ -3994,7 +3569,6 @@
             URL.revokeObjectURL(url);
         }
         
-        // Импорт данных из JSON
         function importData(event, isBackup = false) {
             const file = event.target.files[0];
             if (!file) return;
@@ -4013,13 +3587,11 @@
                         localStorage.setItem('carwash_reserve', reserveBalance.toString());
                         localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                         
-                        // Сохраняем в Firebase, если пользователь авторизован
                         if (currentUser) {
                             saveToFirebase();
                         }
                         
                         renderTransactions();
-                        renderExpenseClassification();
                         renderSavedExpenses();
                         updateDashboard();
                         updateReserveDisplay();
@@ -4034,11 +3606,41 @@
             };
             reader.readAsText(file);
             
-            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова
             event.target.value = '';
         }
         
-        // Вспомогательные функции
+        function saveReport() {
+            const reportContent = document.getElementById('report-content').innerHTML;
+            const blob = new Blob([`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Отчет автомойки</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .profit-metrics { display: flex; justify-content: space-between; margin-bottom: 20px; }
+                        .metric-card { background: #f5f5f5; padding: 15px; border-radius: 8px; text-align: center; flex: 1; margin: 0 10px; }
+                        .accounts-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+                        .account-card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                        .account-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+                        .summary-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+                        .card { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 4px solid #4A6FA5; }
+                    </style>
+                </head>
+                <body>
+                    ${reportContent}
+                </body>
+                </html>
+            `], {type: 'text/html'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Отчет_${new Date().toISOString().split('T')[0]}.html`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
         function formatDate(dateString) {
             const date = new Date(dateString);
             return date.toLocaleDateString('ru-RU');
@@ -4055,8 +3657,8 @@
         function getCategoryLabel(category) {
             const categories = {
                 'detailing': 'Детейлинг',
-                'self12': 'Самообслуживание (1-2)',
-                'self35': 'Самообслуживание (3-5)',
+                'self12': 'Самообслуживание (посты 1-2)',
+                'self35': 'Самообслуживание (посты 3-5)',
                 'reserve': 'Резервный фонд'
             };
             return categories[category] || category;
