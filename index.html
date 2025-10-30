@@ -3244,91 +3244,87 @@
             });
         }
 
-        // Расширенный расчет прибыли с детализацией
-        function calculateAdvancedProfits(transactions) {
-            // Инициализация структур данных
-            const analysis = {
-                detailing: {
-                    income: 0,
-                    operatingExpenses: 0,
-                    cogs: 0,
-                    directCosts: 0,
-                    indirectCosts: 0,
-                    fixedCosts: 0,
-                    variableCosts: 0
-                },
-                self12: {
-                    income: 0,
-                    operatingExpenses: 0,
-                    cogs: 0,
-                    directCosts: 0,
-                    indirectCosts: 0,
-                    fixedCosts: 0,
-                    variableCosts: 0
-                },
-                self35: {
-                    income: 0,
-                    operatingExpenses: 0,
-                    cogs: 0,
-                    directCosts: 0,
-                    indirectCosts: 0,
-                    fixedCosts: 0,
-                    variableCosts: 0
-                }
-            };
+// Расширенный расчет прибыли с детализацией
+function calculateAdvancedProfits(transactions) {
+    // Инициализация структур данных с ВСЕМИ категориями расходов
+    const initCategoryData = () => ({
+        income: 0,
+        operatingExpenses: 0,
+        cogs: 0,
+        directCosts: 0,
+        indirectCosts: 0,
+        fixedCosts: 0,
+        variableCosts: 0
+    });
 
-            // Расчет доходов и расходов по категориям
-            transactions.forEach(transaction => {
-                const { type, category, amount, description, manualExpenseCategory } = transaction;
-                
-                if (type === 'income') {
-                    if (category === 'detailing') analysis.detailing.income += amount;
-                    if (category === 'self12') analysis.self12.income += amount;
-                    if (category === 'self35') analysis.self35.income += amount;
-                } else if (type === 'expense') {
-                    const expenseCategory = manualExpenseCategory || classifyExpense(description);
-                    const expenseAmount = amount;
-                    
-                    // Добавляем к общим расходам
-                    if (category === 'detailing') {
-                        analysis.detailing.operatingExpenses += expenseAmount;
-                        analysis.detailing[expenseCategory] += expenseAmount;
-                    }
-                    if (category === 'self12') {
-                        analysis.self12.operatingExpenses += expenseAmount;
-                        analysis.self12[expenseCategory] += expenseAmount;
-                    }
-                    if (category === 'self35') {
-                        analysis.self35.operatingExpenses += expenseAmount;
-                        analysis.self35[expenseCategory] += expenseAmount;
-                    }
-                }
-            });
+    const analysis = {
+        detailing: initCategoryData(),
+        self12: initCategoryData(),
+        self35: initCategoryData()
+    };
 
-            // Расчет производных показателей
-            ['detailing', 'self12', 'self35'].forEach(category => {
-                const cat = analysis[category];
-                cat.netProfit = cat.income - cat.operatingExpenses;
-                cat.grossProfit = cat.income - cat.cogs;
-                cat.grossMargin = cat.income > 0 ? (cat.grossProfit / cat.income) * 100 : 0;
-                cat.netMargin = cat.income > 0 ? (cat.netProfit / cat.income) * 100 : 0;
-            });
+    // Сопоставление между ключами классификации и свойствами объекта
+    const categoryMapping = {
+        'cogs': 'cogs',
+        'direct': 'directCosts', 
+        'indirect': 'indirectCosts',
+        'fixed': 'fixedCosts',
+        'variable': 'variableCosts'
+    };
 
-            // Расчет общих показателей
-            analysis.totals = {
-                totalIncome: analysis.detailing.income + analysis.self12.income + analysis.self35.income,
-                totalCosts: analysis.detailing.operatingExpenses + analysis.self12.operatingExpenses + analysis.self35.operatingExpenses,
-                totalProfit: analysis.detailing.netProfit + analysis.self12.netProfit + analysis.self35.netProfit,
-                totalGrossProfit: analysis.detailing.grossProfit + analysis.self12.grossProfit + analysis.self35.grossProfit
-            };
-
-            analysis.totals.grossMargin = analysis.totals.totalIncome > 0 ? 
-                (analysis.totals.totalGrossProfit / analysis.totals.totalIncome) * 100 : 0;
-            analysis.totals.netMargin = analysis.totals.totalIncome > 0 ? 
-                (analysis.totals.totalProfit / analysis.totals.totalIncome) * 100 : 0;
-
-            return analysis;
+    // Расчет доходов и расходов по категориям
+    transactions.forEach(transaction => {
+        const { type, category, amount, description, manualExpenseCategory } = transaction;
+        
+        if (type === 'income') {
+            if (category === 'detailing') analysis.detailing.income += amount;
+            if (category === 'self12') analysis.self12.income += amount;
+            if (category === 'self35') analysis.self35.income += amount;
+        } else if (type === 'expense') {
+            const expenseCategory = manualExpenseCategory || classifyExpense(description);
+            const expenseAmount = amount;
+            const analysisCategory = categoryMapping[expenseCategory] || 'variableCosts';
+            
+            // Добавляем к общим расходам
+            if (category === 'detailing') {
+                analysis.detailing.operatingExpenses += expenseAmount;
+                analysis.detailing[analysisCategory] += expenseAmount;
+            }
+            if (category === 'self12') {
+                analysis.self12.operatingExpenses += expenseAmount;
+                analysis.self12[analysisCategory] += expenseAmount;
+            }
+            if (category === 'self35') {
+                analysis.self35.operatingExpenses += expenseAmount;
+                analysis.self35[analysisCategory] += expenseAmount;
+            }
         }
+    });
+
+    // Расчет производных показателей
+    ['detailing', 'self12', 'self35'].forEach(category => {
+        const cat = analysis[category];
+        cat.netProfit = cat.income - cat.operatingExpenses;
+        cat.grossProfit = cat.income - cat.cogs;
+        cat.grossMargin = cat.income > 0 ? (cat.grossProfit / cat.income) * 100 : 0;
+        cat.netMargin = cat.income > 0 ? (cat.netProfit / cat.income) * 100 : 0;
+    });
+
+    // Расчет общих показателей
+    analysis.totals = {
+        totalIncome: analysis.detailing.income + analysis.self12.income + analysis.self35.income,
+        totalCosts: analysis.detailing.operatingExpenses + analysis.self12.operatingExpenses + analysis.self35.operatingExpenses,
+        totalProfit: analysis.detailing.netProfit + analysis.self12.netProfit + analysis.self35.netProfit,
+        totalGrossProfit: analysis.detailing.grossProfit + analysis.self12.grossProfit + analysis.self35.grossProfit
+    };
+
+    analysis.totals.grossMargin = analysis.totals.totalIncome > 0 ? 
+        (analysis.totals.totalGrossProfit / analysis.totals.totalIncome) * 100 : 0;
+    analysis.totals.netMargin = analysis.totals.totalIncome > 0 ? 
+        (analysis.totals.totalProfit / analysis.totals.totalIncome) * 100 : 0;
+
+    return analysis;
+}
 
         // Обновление расширенной аналитики на дашборде
         function updateAdvancedAnalytics(analysis) {
