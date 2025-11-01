@@ -1001,14 +1001,14 @@
                         </div>
                     </div>
                     
-                    <!-- Новые графики динамики за 6 месяцев -->
+                    <!-- Новые графики динамики за 12 месяцев -->
                     <div class="chart-row">
                         <div class="mini-chart-container">
-                            <h4>Динамика доходов за 6 месяцев</h4>
+                            <h4>Динамика доходов за 12 месяцев</h4>
                             <canvas id="incomeTrendChart" height="200"></canvas>
                         </div>
                         <div class="mini-chart-container">
-                            <h4>Динамика расходов за 6 месяцев</h4>
+                            <h4>Динамика расходов за 12 месяцев</h4>
                             <canvas id="expenseTrendChart" height="200"></canvas>
                         </div>
                     </div>
@@ -1357,6 +1357,17 @@
                 </div>
                 
                 <div class="partnership-section">
+                    <h4>Категории расходов для аналитики</h4>
+                    <ul>
+                        <li><strong>Себестоимость (COGS):</strong> Прямые затраты на материалы и химию для оказания услуг (химия, материалы, оборудование, расходники)</li>
+                        <li><strong>Прямые затраты:</strong> Затраты непосредственно связанные с оказанием услуг (зарплата операторов, мойщиков, администраторов)</li>
+                        <li><strong>Косвенные затраты:</strong> Затраты на поддержание бизнеса (реклама, маркетинг, интернет, банковское обслуживание)</li>
+                        <li><strong>Постоянные затраты:</strong> Регулярные фиксированные расходы (аренда, коммунальные услуги, налоги, страхование)</li>
+                        <li><strong>Переменные затраты:</strong> Непредвиденные и прочие расходы (транспорт, обучение, представительские расходы)</li>
+                    </ul>
+                </div>
+                
+                <div class="partnership-section">
                     <h4>Учет и отчетность</h4>
                     <ul>
                         <li>Все операции фиксируются в системе с указанием даты, типа, категории и способа оплаты</li>
@@ -1380,7 +1391,7 @@
             
             <div class="form-group">
                 <h3>О программе</h3>
-                <p>Версия 7.2 (Исправленные отчеты + Улучшенный дизайн + Оптимизированный резерв)</p>
+                <p>Версия 7.3 (Обновленные цвета графиков + Годовые тренды + Баланс по счетам + Описание категорий)</p>
                 <p>2025 Разработано для SK-Detailing by Chingiz</p>
             </div>
         </div>
@@ -2889,14 +2900,14 @@
             }
         }
         
-        // Создание графиков динамики за 6 месяцев
+        // Создание графиков динамики за 12 месяцев
         function createTrendCharts() {
             const now = new Date();
             const months = [];
             const monthNames = [];
             
-            // Создаем массив последних 6 месяцев
-            for (let i = 5; i >= 0; i--) {
+            // Создаем массив последних 12 месяцев
+            for (let i = 11; i >= 0; i--) {
                 const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
                 months.push(date);
                 monthNames.push(date.toLocaleDateString('ru-RU', { month: 'short', year: '2-digit' }));
@@ -3108,7 +3119,7 @@
         function createMiniCharts(transactions, analysisData) {
             const { detailing, self12, self35 } = analysisData;
 
-            // График доходов по категориям
+            // График доходов по категориям с обновленными цветами
             const incomeCtx = document.getElementById('incomeChart').getContext('2d');
             if (incomeChart) incomeChart.destroy();
             
@@ -3118,7 +3129,7 @@
                     labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
                     datasets: [{
                         data: [detailing.income, self12.income, self35.income],
-                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                        backgroundColor: ['#8E44AD', '#17A2B8', '#F0AD4E'] // Обновленные цвета
                     }]
                 },
                 options: {
@@ -3130,7 +3141,7 @@
                 }
             });
 
-            // График расходов по категориям
+            // График расходов по категориям с обновленными цветами
             const expenseCtx = document.getElementById('expenseChart').getContext('2d');
             if (expenseChart) expenseChart.destroy();
             
@@ -3140,7 +3151,7 @@
                     labels: ['Детейлинг', 'Посты 1-2', 'Посты 3-5'],
                     datasets: [{
                         data: [detailing.operatingExpenses, self12.operatingExpenses, self35.operatingExpenses],
-                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                        backgroundColor: ['#8E44AD', '#17A2B8', '#F0AD4E'] // Обновленные цвета
                     }]
                 },
                 options: {
@@ -3152,7 +3163,7 @@
                 }
             });
 
-            // График прибыли по направлениям
+            // График прибыли по направлениям с обновленными цветами
             const profitCtx = document.getElementById('profitChart').getContext('2d');
             if (profitChart) profitChart.destroy();
             
@@ -3163,7 +3174,7 @@
                     datasets: [{
                         label: 'Чистая прибыль',
                         data: [detailing.netProfit, self12.netProfit, self35.netProfit],
-                        backgroundColor: ['#4A6FA5', '#6B8E23', '#F0AD4E']
+                        backgroundColor: ['#8E44AD', '#17A2B8', '#F0AD4E'] // Обновленные цвета
                     }]
                 },
                 options: {
@@ -3177,7 +3188,7 @@
                 }
             });
 
-            // График способов оплаты
+            // График способов оплаты с обновленными цветами
             const paymentMethods = {
                 'sultan_akbars': 0,
                 'sultan_sber': 0,
@@ -3224,11 +3235,11 @@
                         backgroundColor: [
                             '#4A6FA5',
                             '#3A5A8C',
-                            '#D9534F',
-                            '#C9302C',
+                            '#E74C3C', // Обновленный цвет
+                            '#C0392B', // Обновленный цвет
                             '#8E44AD',
                             '#7D3C98',
-                            '#F0AD4E'
+                            '#F39C12' // Обновленный цвет
                         ]
                     }]
                 },
@@ -3465,7 +3476,7 @@ function calculateAdvancedProfits(transactions) {
             return labels[payment] || payment;
         }
         
-        // Генерация отчета
+        // Генерация отчета (СТРУКТУРУ НЕ МЕНЯЕМ)
         function generateReport() {
             const reportContent = document.getElementById('report-content');
             
@@ -3624,6 +3635,13 @@ function calculateAdvancedProfits(transactions) {
                                 <span>Посты 3-5 (расходы):</span>
                                 <span>${accountDetails.sultan.sber_cash.self35.expense.toFixed(2)} руб.</span>
                             </div>
+                            <div class="account-item">
+                                <span><strong>Общий баланс:</strong></span>
+                                <span><strong>${(
+                                    (accountDetails.sultan.sber_cash.self12.income - accountDetails.sultan.sber_cash.self12.expense) +
+                                    (accountDetails.sultan.sber_cash.self35.income - accountDetails.sultan.sber_cash.self35.expense)
+                                ).toFixed(2)} руб.</strong></span>
+                            </div>
                         </div>
                     </div>
                     
@@ -3646,7 +3664,7 @@ function calculateAdvancedProfits(transactions) {
                         </div>
                         
                         <div class="account-details">
-                            <h5>Счет - Детейлинг</h5>
+                            <h5>Счет Чингиза - Детейлинг</h5>
                             <div class="account-item">
                                 <span>Доходы:</span>
                                 <span>${accountDetails.chingiz.card.detailing.income.toFixed(2)} руб.</span>
@@ -3679,54 +3697,102 @@ function calculateAdvancedProfits(transactions) {
                                 <span>Посты 3-5 (расходы):</span>
                                 <span>${accountDetails.chingiz.cash_self.self35.expense.toFixed(2)} руб.</span>
                             </div>
+                            <div class="account-item">
+                                <span><strong>Общий баланс:</strong></span>
+                                <span><strong>${(
+                                    (accountDetails.chingiz.cash_self.self12.income - accountDetails.chingiz.cash_self.self12.expense) +
+                                    (accountDetails.chingiz.cash_self.self35.income - accountDetails.chingiz.cash_self.self35.expense)
+                                ).toFixed(2)} руб.</strong></span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="section-title">Анализ расходов по категориям</div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Направление</th>
-                                <th>Себестоимость</th>
-                                <th>Прямые затраты</th>
-                                <th>Косвенные затраты</th>
-                                <th>Постоянные затраты</th>
-                                <th>Переменные затраты</th>
-                                <th>Всего расходов</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Детейлинг</td>
-                                <td>${analysisData.detailing.cogs.toFixed(2)} руб.</td>
-                                <td>${analysisData.detailing.directCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.detailing.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.detailing.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.detailing.variableCosts.toFixed(2)} руб.</td>
-                                <td>${detailingExpense.toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Посты 1-2</td>
-                                <td>${analysisData.self12.cogs.toFixed(2)} руб.</td>
-                                <td>${analysisData.self12.directCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self12.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self12.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self12.variableCosts.toFixed(2)} руб.</td>
-                                <td>${self12Expense.toFixed(2)} руб.</td>
-                            </tr>
-                            <tr>
-                                <td>Посты 3-5</td>
-                                <td>${analysisData.self35.cogs.toFixed(2)} руб.</td>
-                                <td>${analysisData.self35.directCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self35.indirectCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self35.fixedCosts.toFixed(2)} руб.</td>
-                                <td>${analysisData.self35.variableCosts.toFixed(2)} руб.</td>
-                                <td>${self35Expense.toFixed(2)} руб.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="profitability-grid">
+                    <div class="profitability-card detailing">
+                        <h3>Детейлинг</h3>
+                        <div class="profitability-value">${analysisData.detailing.grossMargin.toFixed(1)}%</div>
+                        <div class="profitability-label">Валовая рентабельность</div>
+                        <div class="profit-breakdown">
+                            <div class="profit-breakdown-item">
+                                <span>Себестоимость:</span>
+                                <span>${analysisData.detailing.cogs.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Прямые затраты:</span>
+                                <span>${analysisData.detailing.directCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Косвенные затраты:</span>
+                                <span>${analysisData.detailing.indirectCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Постоянные затраты:</span>
+                                <span>${analysisData.detailing.fixedCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Переменные затраты:</span>
+                                <span>${analysisData.detailing.variableCosts.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profitability-card self12">
+                        <h3>Посты 1-2</h3>
+                        <div class="profitability-value">${analysisData.self12.grossMargin.toFixed(1)}%</div>
+                        <div class="profitability-label">Валовая рентабельность</div>
+                        <div class="profit-breakdown">
+                            <div class="profit-breakdown-item">
+                                <span>Себестоимость:</span>
+                                <span>${analysisData.self12.cogs.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Прямые затраты:</span>
+                                <span>${analysisData.self12.directCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Косвенные затраты:</span>
+                                <span>${analysisData.self12.indirectCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Постоянные затраты:</span>
+                                <span>${analysisData.self12.fixedCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Переменные затраты:</span>
+                                <span>${analysisData.self12.variableCosts.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profitability-card self35">
+                        <h3>Посты 3-5</h3>
+                        <div class="profitability-value">${analysisData.self35.grossMargin.toFixed(1)}%</div>
+                        <div class="profitability-label">Валовая рентабельность</div>
+                        <div class="profit-breakdown">
+                            <div class="profit-breakdown-item">
+                                <span>Себестоимость:</span>
+                                <span>${analysisData.self35.cogs.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Прямые затраты:</span>
+                                <span>${analysisData.self35.directCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Косвенные затраты:</span>
+                                <span>${analysisData.self35.indirectCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Постоянные затраты:</span>
+                                <span>${analysisData.self35.fixedCosts.toFixed(2)} руб.</span>
+                            </div>
+                            <div class="profit-breakdown-item">
+                                <span>Переменные затраты:</span>
+                                <span>${analysisData.self35.variableCosts.toFixed(2)} руб.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="section-title">Детализация операций</div>
@@ -3746,42 +3812,34 @@ function calculateAdvancedProfits(transactions) {
                         <tbody>
             `;
             
-            // Добавляем строки с операциями
-            const reportTransactionsSorted = [...reportTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            // Добавляем строки с транзакциями
+            reportTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            if (reportTransactionsSorted.length === 0) {
+            reportTransactions.forEach(transaction => {
+                // Определяем категорию расходов для отображения
+                let expenseCategoryDisplay = '';
+                if (transaction.type === 'expense') {
+                    const manualCategory = transaction.manualExpenseCategory;
+                    if (manualCategory) {
+                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
+                    } else {
+                        const autoCategory = classifyExpense(transaction.description);
+                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
+                    }
+                }
+                
                 reportHTML += `
                     <tr>
-                        <td colspan="7" style="text-align: center;">Нет операций за выбранный период</td>
+                        <td>${formatDate(transaction.date)}</td>
+                        <td>${getTypeLabel(transaction.type)}</td>
+                        <td>${getCategoryLabel(transaction.category)}</td>
+                        <td>${getPaymentLabel(transaction.payment)}</td>
+                        <td>${transaction.amount.toFixed(2)} руб.</td>
+                        <td>${transaction.description || ''}</td>
+                        <td>${expenseCategoryDisplay}</td>
                     </tr>
                 `;
-            } else {
-                reportTransactionsSorted.forEach(transaction => {
-                    // Определяем категорию расходов для отображения
-                    let expenseCategoryDisplay = '';
-                    if (transaction.type === 'expense') {
-                        const manualCategory = transaction.manualExpenseCategory;
-                        if (manualCategory) {
-                            expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                        } else {
-                            const autoCategory = classifyExpense(transaction.description);
-                            expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
-                        }
-                    }
-                    
-                    reportHTML += `
-                        <tr>
-                            <td>${formatDate(transaction.date)}</td>
-                            <td>${getTypeLabel(transaction.type)}</td>
-                            <td>${getCategoryLabel(transaction.category)}</td>
-                            <td>${getPaymentLabel(transaction.payment)}</td>
-                            <td>${transaction.amount.toFixed(2)} руб.</td>
-                            <td>${transaction.description || ''}</td>
-                            <td>${expenseCategoryDisplay}</td>
-                        </tr>
-                    `;
-                });
-            }
+            });
             
             reportHTML += `
                         </tbody>
@@ -3790,76 +3848,25 @@ function calculateAdvancedProfits(transactions) {
             `;
             
             reportContent.innerHTML = reportHTML;
-            reportGenerated = true;
         }
         
         // Сохранение отчета
         function saveReport() {
-            if (!reportGenerated) {
-                alert('Сначала сформируйте отчет');
-                return;
-            }
-            
-            const reportContent = document.getElementById('report-content');
-            const reportHTML = reportContent.innerHTML;
-            
-            // Создаем Blob с HTML-содержимым
-            const blob = new Blob([`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Финансовый отчет</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .summary-cards { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 30px; }
-                        .card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; flex: 1; min-width: 250px; }
-                        .settlement-card { background: #4A6FA5; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-                        .reserve-card { background: #F0AD4E; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-                        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        .section-title { font-size: 1.4rem; margin: 22px 0 12px; padding-bottom: 8px; border-bottom: 2px solid #E9ECEF; }
-                        .accounts-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-                        .account-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
-                        .account-details { margin-top: 15px; }
-                        .account-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #E9ECEF; }
-                    </style>
-                </head>
-                <body>
-                    ${reportHTML}
-                </body>
-                </html>
-            `], { type: 'text/html' });
-            
-            // Создаем ссылку для скачивания
+            const reportContent = document.getElementById('report-content').innerHTML;
+            const blob = new Blob([reportContent], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
+            
             const a = document.createElement('a');
             a.href = url;
-            a.download = `финансовый_отчет_${new Date().toISOString().split('T')[0]}.html`;
-            document.body.appendChild(a);
+            a.download = `отчет_${new Date().toISOString().split('T')[0]}.html`;
             a.click();
-            document.body.removeChild(a);
+            
             URL.revokeObjectURL(url);
         }
         
         // Экспорт отчета в Excel
         function exportReportToExcel() {
-            if (!reportGenerated) {
-                alert('Сначала сформируйте отчет');
-                return;
-            }
-            
-            // Получаем даты периода для отчета
             const { startDate, endDate } = getReportPeriodDates();
-            let periodLabel = '';
-            
-            // Создаем метку периода
-            if (startDate && endDate) {
-                periodLabel = `за период с ${formatDate(startDate)} по ${formatDate(endDate)}`;
-            } else {
-                periodLabel = 'за все время';
-            }
             
             // Фильтруем транзакции по периоду отчета
             const reportTransactions = startDate && endDate ? 
@@ -3877,7 +3884,8 @@ function calculateAdvancedProfits(transactions) {
                 chingizIncome, chingizExpense, chingizProfit,
                 sultanIncome, sultanExpense, sultanProfit,
                 totalProfit,
-                mutualSettlement
+                mutualSettlement,
+                reserveUsed
             } = calculateProfits(reportTransactions, startDate, endDate);
             
             // Рассчитываем расширенную аналитику
@@ -3886,79 +3894,51 @@ function calculateAdvancedProfits(transactions) {
             // Создаем книгу Excel
             const wb = XLSX.utils.book_new();
             
-            // Лист с общей информацией
+            // Создаем лист с итогами
             const summaryData = [
-                ['Финансовый отчет', periodLabel],
+                ['Финансовый отчет'],
+                ['Период', startDate && endDate ? `${formatDate(startDate)} - ${formatDate(endDate)}` : 'Все время'],
                 [''],
-                ['Направление', 'Доходы', 'Расходы', 'Чистая прибыль', 'Валовая маржа'],
-                ['Детейлинг', detailingIncome, detailingExpense, detailingNet, `${analysisData.detailing.grossMargin.toFixed(1)}%`],
-                ['Посты 1-2', self12Income, self12Expense, self12Net, `${analysisData.self12.grossMargin.toFixed(1)}%`],
-                ['Посты 3-5', self35Income, self35Expense, self35Net, `${analysisData.self35.grossMargin.toFixed(1)}%`],
+                ['Категория', 'Доходы', 'Расходы', 'Чистая прибыль', 'Валовая рентабельность'],
+                ['Детейлинг', detailingIncome, detailingExpense, detailingNet, analysisData.detailing.grossMargin],
+                ['Посты 1-2', self12Income, self12Expense, self12Net, analysisData.self12.grossMargin],
+                ['Посты 3-5', self35Income, self35Expense, self35Net, analysisData.self35.grossMargin],
                 [''],
                 ['Прибыль собственника и управляющего'],
                 ['Султан (собственник)', sultanProfit],
                 ['Чингиз (управляющий)', chingizProfit],
-                ['Итого', totalProfit],
+                ['Общая прибыль', totalProfit],
                 [''],
                 ['Взаимные расчеты'],
-                ['Сумма для уравнивания прибыли', Math.abs(mutualSettlement)],
-                [mutualSettlement > 0 ? 'Султан должен перевести Чингизу' : mutualSettlement < 0 ? 'Чингиз должен перевести Султану' : 'Расчеты сбалансированы']
+                ['Сумма для уравнивания', mutualSettlement],
+                ['Использовано резерва', reserveUsed]
             ];
             
             const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
-            XLSX.utils.book_append_sheet(wb, wsSummary, 'Общая информация');
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Итоги');
             
-            // Лист с анализом расходов
-            const expenseAnalysisData = [
-                ['Анализ расходов по категориям'],
-                [''],
-                ['Направление', 'Себестоимость', 'Прямые затраты', 'Косвенные затраты', 'Постоянные затраты', 'Переменные затраты', 'Всего расходов'],
-                ['Детейлинг', analysisData.detailing.cogs, analysisData.detailing.directCosts, analysisData.detailing.indirectCosts, analysisData.detailing.fixedCosts, analysisData.detailing.variableCosts, detailingExpense],
-                ['Посты 1-2', analysisData.self12.cogs, analysisData.self12.directCosts, analysisData.self12.indirectCosts, analysisData.self12.fixedCosts, analysisData.self12.variableCosts, self12Expense],
-                ['Посты 3-5', analysisData.self35.cogs, analysisData.self35.directCosts, analysisData.self35.indirectCosts, analysisData.self35.fixedCosts, analysisData.self35.variableCosts, self35Expense]
-            ];
+            // Создаем лист с транзакциями
+            const transactionsData = reportTransactions.map(t => [
+                formatDate(t.date),
+                getTypeLabel(t.type),
+                getCategoryLabel(t.category),
+                getPaymentLabel(t.payment),
+                t.amount,
+                t.description || '',
+                t.type === 'expense' ? 
+                    (t.manualExpenseCategory ? 
+                        getExpenseCategoryName(t.manualExpenseCategory) + ' (ручная)' : 
+                        getExpenseCategoryName(classifyExpense(t.description)) + ' (авто)') : 
+                    ''
+            ]);
             
-            const wsExpenseAnalysis = XLSX.utils.aoa_to_sheet(expenseAnalysisData);
-            XLSX.utils.book_append_sheet(wb, wsExpenseAnalysis, 'Анализ расходов');
-            
-            // Лист с операциями
-            const transactionsData = [
-                ['Детализация операций'],
-                [''],
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
-            ];
-            
-            const reportTransactionsSorted = [...reportTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            reportTransactionsSorted.forEach(transaction => {
-                // Определяем категорию расходов для отображения
-                let expenseCategoryDisplay = '';
-                if (transaction.type === 'expense') {
-                    const manualCategory = transaction.manualExpenseCategory;
-                    if (manualCategory) {
-                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                    } else {
-                        const autoCategory = classifyExpense(transaction.description);
-                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
-                    }
-                }
-                
-                transactionsData.push([
-                    formatDate(transaction.date),
-                    getTypeLabel(transaction.type),
-                    getCategoryLabel(transaction.category),
-                    getPaymentLabel(transaction.payment),
-                    transaction.amount,
-                    transaction.description || '',
-                    expenseCategoryDisplay
-                ]);
-            });
+            transactionsData.unshift(['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']);
             
             const wsTransactions = XLSX.utils.aoa_to_sheet(transactionsData);
             XLSX.utils.book_append_sheet(wb, wsTransactions, 'Операции');
             
             // Сохраняем файл
-            XLSX.writeFile(wb, `финансовый_отчет_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.writeFile(wb, `отчет_${new Date().toISOString().split('T')[0]}.xlsx`);
         }
         
         // Экспорт данных в Excel
@@ -3966,40 +3946,38 @@ function calculateAdvancedProfits(transactions) {
             // Создаем книгу Excel
             const wb = XLSX.utils.book_new();
             
-            // Создаем лист с операциями
-            const transactionsData = [
-                ['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов']
-            ];
+            // Создаем лист с транзакциями
+            const transactionsData = transactions.map(t => [
+                t.date,
+                t.type,
+                t.category,
+                t.payment,
+                t.amount,
+                t.description || '',
+                t.createdAt,
+                t.manualExpenseCategory || ''
+            ]);
             
-            // Сортируем транзакции по дате (новые сверху)
-            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedTransactions.forEach(transaction => {
-                // Определяем категорию расходов для отображения
-                let expenseCategoryDisplay = '';
-                if (transaction.type === 'expense') {
-                    const manualCategory = transaction.manualExpenseCategory;
-                    if (manualCategory) {
-                        expenseCategoryDisplay = getExpenseCategoryName(manualCategory) + ' (ручная)';
-                    } else {
-                        const autoCategory = classifyExpense(transaction.description);
-                        expenseCategoryDisplay = getExpenseCategoryName(autoCategory) + ' (авто)';
-                    }
-                }
-                
-                transactionsData.push([
-                    formatDate(transaction.date),
-                    getTypeLabel(transaction.type),
-                    getCategoryLabel(transaction.category),
-                    getPaymentLabel(transaction.payment),
-                    transaction.amount,
-                    transaction.description || '',
-                    expenseCategoryDisplay
-                ]);
-            });
+            transactionsData.unshift(['Дата', 'Тип', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Дата создания', 'Категория расходов']);
             
             const wsTransactions = XLSX.utils.aoa_to_sheet(transactionsData);
             XLSX.utils.book_append_sheet(wb, wsTransactions, 'Операции');
+            
+            // Создаем лист с сохраненными расходами
+            const savedExpensesData = savedExpenses.map(e => [
+                e.id,
+                e.category,
+                e.payment,
+                e.amount,
+                e.description,
+                e.expenseCategory,
+                e.createdAt
+            ]);
+            
+            savedExpensesData.unshift(['ID', 'Категория', 'Способ оплаты', 'Сумма', 'Описание', 'Категория расходов', 'Дата создания']);
+            
+            const wsSavedExpenses = XLSX.utils.aoa_to_sheet(savedExpensesData);
+            XLSX.utils.book_append_sheet(wb, wsSavedExpenses, 'Сохраненные расходы');
             
             // Сохраняем файл
             XLSX.writeFile(wb, `данные_автомойки_${new Date().toISOString().split('T')[0]}.xlsx`);
@@ -4009,35 +3987,26 @@ function calculateAdvancedProfits(transactions) {
         function exportData(isBackup = false) {
             const data = {
                 transactions,
-                reserveBalance,
                 savedExpenses,
+                reserveBalance,
                 exportDate: new Date().toISOString(),
                 isBackup
             };
             
             const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
             
-            const url = URL.createObjectURL(dataBlob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = isBackup ? 
-                `резервная_копия_автомойки_${new Date().toISOString().split('T')[0]}.json` :
-                `данные_автомойки_${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
+            a.download = isBackup ? `резервная_копия_${new Date().toISOString().split('T')[0]}.json` : 'данные_автомойки.json';
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
             
-            if (isBackup) {
-                alert('Резервная копия успешно создана!');
-            } else {
-                alert('Данные успешно экспортированы!');
-            }
+            URL.revokeObjectURL(url);
         }
         
         // Импорт данных
-        function importData(event, isRestore = false) {
+        function importData(event, isBackup = false) {
             const file = event.target.files[0];
             if (!file) return;
             
@@ -4046,47 +4015,38 @@ function calculateAdvancedProfits(transactions) {
                 try {
                     const data = JSON.parse(e.target.result);
                     
-                    // Проверяем структуру данных
-                    if (!data.transactions || !Array.isArray(data.transactions)) {
-                        throw new Error('Некорректный формат файла');
-                    }
-                    
-                    // Запрашиваем подтверждение
-                    const message = isRestore ? 
-                        'Вы уверены, что хотите восстановить данные из резервной копии? Текущие данные будут перезаписаны.' :
-                        'Вы уверены, что хотите импортировать данные? Текущие данные будут перезаписаны.';
-                    
-                    if (confirm(message)) {
+                    if (data.transactions) {
                         transactions = data.transactions;
-                        reserveBalance = data.reserveBalance || 0;
-                        savedExpenses = data.savedExpenses || [];
-                        
-                        // Сохраняем в localStorage
                         localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
-                        localStorage.setItem('carwash_reserve', reserveBalance.toString());
-                        localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
-                        
-                        // Сохраняем в Firebase, если пользователь авторизован
-                        if (currentUser) {
-                            saveToFirebase();
-                        }
-                        
-                        // Обновляем интерфейс
-                        renderTransactions();
-                        updateDashboard();
-                        updateReserveDisplay();
-                        renderSavedExpenses();
-                        
-                        alert(isRestore ? 'Данные успешно восстановлены!' : 'Данные успешно импортированы!');
                     }
+                    
+                    if (data.savedExpenses) {
+                        savedExpenses = data.savedExpenses;
+                        localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
+                    }
+                    
+                    if (data.reserveBalance) {
+                        reserveBalance = data.reserveBalance;
+                        localStorage.setItem('carwash_reserve', reserveBalance.toString());
+                    }
+                    
+                    // Сохраняем в Firebase, если пользователь авторизован
+                    if (currentUser) {
+                        saveToFirebase();
+                    }
+                    
+                    renderTransactions();
+                    updateDashboard();
+                    updateReserveDisplay();
+                    renderSavedExpenses();
+                    
+                    alert(isBackup ? 'Данные успешно восстановлены из резервной копии!' : 'Данные успешно импортированы!');
                 } catch (error) {
-                    console.error('Ошибка импорта данных:', error);
                     alert('Ошибка при импорте данных: ' + error.message);
                 }
             };
-            reader.readAsText(file);
             
-            // Сбрасываем значение input, чтобы можно было загрузить тот же файл снова
+            reader.readAsText(file);
             event.target.value = '';
         }
     </script>
