@@ -1145,6 +1145,7 @@
                 <button id="add-transaction-btn">Добавить операцию</button>
                 <button id="export-btn" class="btn-secondary">Экспорт в Excel</button>
                 <button id="sync-firebase-btn" class="btn-purple">Синхронизировать с облаком</button>
+                <button id="force-sync-btn" class="btn-purple">Принудительная синхронизация</button>
             </div>
             
             <div class="table-container">
@@ -1195,7 +1196,7 @@
                     <label for="report-month">Месяц</label>
                     <select id="report-month">
                         <option value="01">Январь</option>
-                        <option value="02">Февраль</option>
+                        <option value="02">Февраь</option>
                         <option value="03">Март</option>
                         <option value="04">Апрель</option>
                         <option value="05">Май</option>
@@ -1391,7 +1392,7 @@
             
             <div class="form-group">
                 <h3>О программе</h3>
-                <p>Версия 7.3 (Обновленные цвета графиков + Годовые тренды + Баланс по счетам + Описание категорий)</p>
+                <p>Версия 7.4 (Исправлено сохранение в Firebase + Улучшенная синхронизация)</p>
                 <p>2025 Разработано для SK-Detailing by Chingiz</p>
             </div>
         </div>
@@ -1838,11 +1839,21 @@
                 if (user) {
                     currentUser = user;
                     showUserInfo(user);
-                    loadFromFirebase();
+                    showFirebaseStatus('Успешный вход в систему', 'success');
+                    
+                    // Загружаем данные из Firebase после входа
+                    setTimeout(() => {
+                        loadFromFirebase().catch(error => {
+                            console.error('Ошибка при загрузке данных:', error);
+                            showFirebaseStatus(`Ошибка загрузки данных: ${error.message}`, 'error');
+                        });
+                    }, 1000);
+                    
                 } else {
                     currentUser = null;
                     hideUserInfo();
                     showAuthModal();
+                    showFirebaseStatus('Вы не авторизованы. Данные сохраняются только локально.', 'warning');
                 }
             });
         }
@@ -1869,6 +1880,43 @@
         // Скрыть модальное окно аутентификации
         function hideAuthModal() {
             document.getElementById('auth-modal').style.display = 'none';
+        }
+
+        // Проверка состояния Firebase
+        function checkFirebaseConnection() {
+            try {
+                // Простая проверка, что Firebase инициализирован
+                if (firebase.apps.length === 0) {
+                    showFirebaseStatus('Firebase не инициализирован', 'error');
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                showFirebaseStatus(`Ошибка подключения Firebase: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // Улучшенная функция очистки данных от undefined
+        function removeUndefinedFields(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(item => {
+                    if (item && typeof item === 'object') {
+                        return removeUndefinedFields(item);
+                    }
+                    return item;
+                });
+            } else if (obj && typeof obj === 'object') {
+                const cleaned = {};
+                for (const [key, value] of Object.entries(obj)) {
+                    if (value !== undefined) {
+                        cleaned[key] = value && typeof value === 'object' ? 
+                            removeUndefinedFields(value) : value;
+                    }
+                }
+                return cleaned;
+            }
+            return obj;
         }
 
         // Загрузка данных из Firebase
@@ -1907,48 +1955,81 @@
             }
         }
 
-        // Сохранение данных в Firebase
+        // Улучшенное сохранение данных в Firebase
         async function saveToFirebase() {
-            if (!currentUser) return;
+            if (!currentUser) {
+                console.log('Пользователь не авторизован, пропускаем сохранение в Firebase');
+                return;
+            }
+            
+            if (!checkFirebaseConnection()) {
+                return;
+            }
             
             try {
                 showFirebaseStatus('Сохранение данных в облако...', 'warning');
                 
-                function removeUndefinedFields(obj) {
-                    if (Array.isArray(obj)) {
-                        return obj.map(item => 
-                            item && typeof item === 'object' ? removeUndefinedFields(item) : item
-                        ).filter(item => item !== undefined);
-                    } else if (obj && typeof obj === 'object') {
-                        return Object.fromEntries(
-                            Object.entries(obj)
-                                .map(([key, value]) => [
-                                    key, 
-                                    value && typeof value === 'object' ? removeUndefinedFields(value) : value
-                                ])
-                                .filter(([_, value]) => value !== undefined)
-                        );
-                    }
-                    return obj;
-                }
-                
-                const cleanedTransactions = removeUndefinedFields(transactions);
-                const cleanedSavedExpenses = removeUndefinedFields(savedExpenses);
-                
-                const data = removeUndefinedFields({
-                    transactions: cleanedTransactions,
-                    savedExpenses: cleanedSavedExpenses,
+                // Создаем копию данных для очистки
+                const dataToSave = {
+                    transactions: transactions.map(t => ({
+                        id: t.id,
+                        date: t.date,
+                        type: t.type,
+                        category: t.category,
+                        payment: t.payment,
+                        amount: t.amount,
+                        description: t.description || '',
+                        manualExpenseCategory: t.manualExpenseCategory || null,
+                        createdAt: t.createdAt || new Date().toISOString()
+                    })),
+                    savedExpenses: savedExpenses.map(exp => ({
+                        id: exp.id,
+                        category: exp.category,
+                        payment: exp.payment,
+                        amount: exp.amount || null,
+                        description: exp.description,
+                        expenseCategory: exp.expenseCategory || '',
+                        createdAt: exp.createdAt || new Date().toISOString()
+                    })),
                     reserveBalance: reserveBalance,
                     lastUpdate: new Date().toISOString(),
                     email: currentUser.email
-                });
+                };
                 
-                await db.collection('users').doc(currentUser.uid).set(data);
+                // Очищаем данные от undefined значений
+                const cleanedData = removeUndefinedFields(dataToSave);
+                
+                console.log('Сохранение данных в Firebase:', cleanedData);
+                
+                await db.collection('users').doc(currentUser.uid).set(cleanedData, { merge: true });
                 
                 showFirebaseStatus(`Данные успешно сохранены в облако (${transactions.length} операций)`, 'success');
             } catch (error) {
                 console.error('Ошибка сохранения в Firebase:', error);
                 showFirebaseStatus(`Ошибка сохранения: ${error.message}`, 'error');
+            }
+        }
+
+        // Принудительная синхронизация всех данных
+        async function forceSync() {
+            if (!currentUser) {
+                showFirebaseStatus('Для синхронизации необходимо войти в систему', 'error');
+                return;
+            }
+            
+            try {
+                showFirebaseStatus('Начата принудительная синхронизация...', 'warning');
+                
+                // Сохраняем текущие данные
+                await saveToFirebase();
+                
+                // Затем загружаем свежие данные
+                await loadFromFirebase();
+                
+                showFirebaseStatus('Синхронизация завершена успешно', 'success');
+            } catch (error) {
+                console.error('Ошибка при синхронизации:', error);
+                showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
             }
         }
 
@@ -2142,6 +2223,11 @@
             document.getElementById('sync-firebase-btn').addEventListener('click', function() {
                 saveToFirebase();
             });
+
+            // Принудительная синхронизация
+            document.getElementById('force-sync-btn').addEventListener('click', function() {
+                forceSync();
+            });
             
             // Генерация отчета
             document.getElementById('generate-report-btn').addEventListener('click', function() {
@@ -2310,7 +2396,10 @@
             localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
             
             if (currentUser) {
-                saveToFirebase();
+                saveToFirebase().catch(error => {
+                    console.error('Ошибка при сохранении в Firebase:', error);
+                    showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                });
             }
             
             document.getElementById('saved-expense-category').value = '';
@@ -2375,7 +2464,10 @@
                 localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                 
                 if (currentUser) {
-                    saveToFirebase();
+                    saveToFirebase().catch(error => {
+                        console.error('Ошибка при сохранении в Firebase:', error);
+                        showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                    });
                 }
                 
                 cancelEditSavedExpense();
@@ -2409,7 +2501,10 @@
                 localStorage.setItem('carwash_saved_expenses', JSON.stringify(savedExpenses));
                 
                 if (currentUser) {
-                    saveToFirebase();
+                    saveToFirebase().catch(error => {
+                        console.error('Ошибка при сохранении в Firebase:', error);
+                        showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                    });
                 }
                 
                 renderSavedExpenses();
@@ -2614,7 +2709,10 @@
             
             // Сохраняем в Firebase, если пользователь авторизован
             if (currentUser) {
-                saveToFirebase();
+                saveToFirebase().catch(error => {
+                    console.error('Ошибка при сохранении в Firebase:', error);
+                    showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                });
             }
             
             // Обновляем интерфейс
@@ -2656,50 +2754,58 @@
                 return;
             }
             
-            if (editingId) {
-                // Редактирование существующей операции
-                const index = transactions.findIndex(t => t.id === editingId);
-                if (index !== -1) {
-                    transactions[index] = {
-                        ...transactions[index],
+            try {
+                if (editingId) {
+                    // Редактирование существующей операции
+                    const index = transactions.findIndex(t => t.id === editingId);
+                    if (index !== -1) {
+                        transactions[index] = {
+                            ...transactions[index],
+                            date,
+                            type,
+                            category,
+                            payment,
+                            amount,
+                            description,
+                            manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null
+                        };
+                    }
+                } else {
+                    // Добавление новой операции
+                    const newTransaction = {
+                        id: Date.now().toString(),
                         date,
                         type,
                         category,
                         payment,
                         amount,
                         description,
-                        manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null
+                        manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null,
+                        createdAt: new Date().toISOString()
                     };
+                    
+                    transactions.push(newTransaction);
                 }
-            } else {
-                // Добавление новой операции
-                const newTransaction = {
-                    id: Date.now().toString(),
-                    date,
-                    type,
-                    category,
-                    payment,
-                    amount,
-                    description,
-                    manualExpenseCategory: type === 'expense' ? (expenseCategory || null) : null,
-                    createdAt: new Date().toISOString()
-                };
                 
-                transactions.push(newTransaction);
+                // Сохраняем в localStorage
+                localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
+                
+                // Сохраняем в Firebase, если пользователь авторизован
+                if (currentUser) {
+                    saveToFirebase().catch(error => {
+                        console.error('Ошибка при сохранении в Firebase:', error);
+                        showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                    });
+                }
+                
+                // Обновляем интерфейс
+                hideTransactionModal();
+                renderTransactions();
+                updateDashboard();
+            } catch (error) {
+                console.error('Ошибка при сохранении транзакции:', error);
+                alert('Ошибка при сохранении операции: ' + error.message);
             }
-            
-            // Сохраняем в localStorage
-            localStorage.setItem('carwash_transactions', JSON.stringify(transactions));
-            
-            // Сохраняем в Firebase, если пользователь авторизован
-            if (currentUser) {
-                saveToFirebase();
-            }
-            
-            // Обновляем интерфейс
-            hideTransactionModal();
-            renderTransactions();
-            updateDashboard();
         }
         
         // Удалить операцию
@@ -2710,7 +2816,10 @@
                 
                 // Сохраняем в Firebase, если пользователь авторизован
                 if (currentUser) {
-                    saveToFirebase();
+                    saveToFirebase().catch(error => {
+                        console.error('Ошибка при сохранении в Firebase после удаления:', error);
+                        showFirebaseStatus(`Ошибка синхронизации: ${error.message}`, 'error');
+                    });
                 }
                 
                 renderTransactions();
